@@ -1,0 +1,47 @@
+{
+  "name": "sgp-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc -b && vite build",
+    "build:pages": "tsc -b && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "ingest": "NODE_PATH=./node_modules tsx ../scripts/ingest/ingest.ts",
+    "validate:data": "NODE_PATH=./node_modules tsx ../scripts/validate/validate-data.ts",
+    "build:aggregates": "NODE_PATH=./node_modules tsx ../scripts/ingest/build-aggregates.ts",
+    "build:search": "NODE_PATH=./node_modules tsx ../scripts/ingest/build-search-index.ts",
+    "test": "vitest run --exclude src/tests/e2e/**",
+    "test:smoke": "playwright test"
+  },
+  "dependencies": {
+    "@tanstack/react-virtual": "^3.13.12",
+    "d3": "^7.9.0",
+    "d3-dsv": "^3.0.1",
+    "file-saver": "^2.0.5",
+    "fuse.js": "^7.1.0",
+    "html-to-image": "^1.11.13",
+    "jspdf": "^3.0.1",
+    "jszip": "^3.10.1",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "xlsx": "^0.18.5",
+    "zod": "^3.24.1",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/d3": "^7.4.3",
+    "@types/file-saver": "^2.0.7",
+    "@types/node": "^22.10.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7",
+    "vitest": "^2.1.8"
+  }
+}

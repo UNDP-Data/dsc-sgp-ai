@@ -73,6 +73,27 @@ a:hover {
   letter-spacing: 0;
 }
 
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 999px;
+  padding: 0 0.9rem;
+  color: var(--text, #102033);
+  background: rgba(255, 255, 255, 0.76);
+  font-size: 0.88rem;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+  border-color: rgba(0, 110, 181, 0.34);
+  background: rgba(255, 255, 255, 0.94);
+  outline: none;
+}
+
 .status-pill {
   min-height: 36px;
   display: inline-flex;

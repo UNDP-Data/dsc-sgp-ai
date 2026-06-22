@@ -94,6 +94,32 @@ GET  /assistants/sgp_ai/sources
 GET  /assistants/sgp_ai/debug/retrieve
 ```
 
+## Dashboard route
+
+The SGP portfolio dashboard has been migrated into this repository in two isolated locations:
+
+```text
+dashboard/      # committed static build served by branch-based GitHub Pages at /dashboard/
+dashboard-app/  # maintainable source copy of the original dashboard project
+```
+
+The static `dashboard/` folder was built with `VITE_BASE_PATH=/dashboard/`, so it can be served directly at:
+
+```text
+https://<owner>.github.io/<repo>/dashboard/
+```
+
+For ongoing maintenance, edit the source in `dashboard-app/`, then rebuild and copy the output:
+
+```bash
+cd dashboard-app/app
+npm ci
+VITE_BASE_PATH=/dashboard/ npm run build:pages
+rsync -a --delete dist/ ../../dashboard/
+```
+
+This repository also includes `.github/workflows/deploy-pages.yml`. If GitHub Pages is configured with `Source: GitHub Actions`, the workflow builds `dashboard-app/app`, stages the root SGP AI page, and publishes the dashboard at `/dashboard/` without needing to commit a rebuilt `dashboard/` folder after every edit.
+
 ## Validate from the source backend
 
 Run the authoritative validator from the original backend repo:

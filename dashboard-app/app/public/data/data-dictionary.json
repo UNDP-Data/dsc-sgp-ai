@@ -1,0 +1,382 @@
+{
+  "generatedAt": "2026-06-17T23:34:48.221Z",
+  "projects": [
+    {
+      "field": "PROJECTNUMBER",
+      "nonNull": 30753,
+      "missing": 0,
+      "inferredType": "text",
+      "examples": [
+        "BEN/ OP3/ 02/ 07/ 02",
+        "BEN/ OP3/ 02/ 07/ 01",
+        "BEN/ OP3/ 02/ 07/ 03",
+        "BEN/ SGP/OP4/Core/07/01/ 04",
+        "BEN/ SGP/OP4/Core/07/01/ 05"
+      ]
+    },
+    {
+      "field": "OPERATIONALPHASETXT",
+      "nonNull": 30753,
+      "missing": 0,
+      "inferredType": "text",
+      "examples": [
+        "OP3 - Y2 (Mar 06 - Jun 07)",
+        "OP4 - Y1 (Jul 07-Jun08)"
+      ]
+    },
+    {
+      "field": "FULLGRANT",
+      "nonNull": 30753,
+      "missing": 0,
+      "inferredType": "number",
+      "examples": [
+        "1"
+      ]
+    },
+    {
+      "field": "PROJECTCATEGORYTXT",
+      "nonNull": 30753,
+      "missing": 0,
+      "inferredType": "text",
+      "examples": [
+        "Regular"
+      ]
+    },
+    {
+      "field": "PROJECTTITLE",
+      "nonNull": 30753,
+      "missing": 0,
+      "inferredType": "text",
+      "examples": [
+        "Promotion du pourghère (Jatropha curcas) par les groupements féminins et sensibilisation à l'utilisation de son huile comme biocarburant dans les villages de Dotan et Avobgana au Bénin",
+        "Promotion et vulgarisation des foyers économiques et autocuiseurs dans la commune de Zangnanado pour la lutte contre la déforestation et la réduction des effets des changements climatiques",
+        "Sauvegarde des tortues marines de l'Atlantique et de leurs habitats le long du littoral du Bénin",
+        "Appui à la Sauvegarde de la Biodiversité Végétale sur les terres agricoles de Koutchagou, bassin versant de la Koumagou (PASBV)",
+        "Conservation de la diversité biologique de la forêt de Igbodja"
+      ]
+    },
+    {
+      "field": "REGIONID",
+      "nonNull": 30753,
+      "missing": 0,
+      "inferredType": "text",
+      "examples": [
+        "RBA"
+      ]
+    },
+    {
+      "field": "GRANTAMOUNT",
+      "nonNull": 30753,
+      "missing": 0,
+      "inferredType": "number",
+      "examples": [
+        "50000",
+        "49924",
+        "49998",
+        "24685",
+        "22485"
+      ]
+    },
+    {
+      "field": "COUNTRYNAME",
+      "nonNull": 30753,
+      "missing": 0,
+      "inferredType": "text",
+      "examples": [
+        "BENIN"
+      ]
+    },
+    {
+      "field": "INSTITUTIONALTYPETXT",
+      "nonNull": 30669,
+      "missing": 84,
+      "inferredType": "text",
+      "examples": [
+        "Non-government Organization"
+      ]
+    },
+    {
+      "field": "COMPANYTITLE",
+      "nonNull": 30669,
+      "missing": 84,
+      "inferredType": "text",
+      "examples": [
+        "Groupe d’Echanges de savoir faire et d’Appui aux Initiatives rurales de Développement",
+        "Organisation des Femmes pour la Gestion de l’Energie, de l’Environnement et la Promotion du développement intégré",
+        "Nature Tropicale ONG «Musée des Sciences Naturelles»",
+        "Alpha et Oméga Environnement ONG",
+        "ACTION PLUS -ONG"
+      ]
+    },
+    {
+      "field": "FOCALAREA",
+      "nonNull": 30704,
+      "missing": 49,
+      "inferredType": "text",
+      "examples": [
+        "Climate Change",
+        "Biodiversity",
+        "Land Degradation"
+      ]
+    },
+    {
+      "field": "PROJECTSTATUSTXT",
+      "nonNull": 30753,
+      "missing": 0,
+      "inferredType": "text",
+      "examples": [
+        "Satisfactorily Completed"
+      ]
+    },
+    {
+      "field": "STARTMONTH",
+      "nonNull": 30719,
+      "missing": 34,
+      "inferredType": "number",
+      "examples": [
+        "6",
+        "1"
+      ]
+    },
+    {
+      "field": "STARTYEAR",
+      "nonNull": 30720,
+      "missing": 33,
+      "inferredType": "number",
+      "examples": [
+        "2007",
+        "2008"
+      ]
+    },
+    {
+      "field": "COFINANCINGAMOUNTCASH",
+      "nonNull": 28773,
+      "missing": 1980,
+      "inferredType": "number",
+      "examples": [
+        "9478",
+        "7109",
+        "21426",
+        "5553",
+        "24947"
+      ]
+    },
+    {
+      "field": "COFINANCINGAMOUNTKIND",
+      "nonNull": 29070,
+      "missing": 1683,
+      "inferredType": "number",
+      "examples": [
+        "28715",
+        "29739",
+        "23135",
+        "36135",
+        "13643"
+      ]
+    },
+    {
+      "field": "NSCAPPROVALDATE",
+      "nonNull": 17859,
+      "missing": 12894,
+      "inferredType": "text",
+      "examples": [
+        "2012-09-28"
+      ]
+    },
+    {
+      "field": "FUNDINGSOURCE",
+      "nonNull": 30701,
+      "missing": 52,
+      "inferredType": "text",
+      "examples": [
+        "GEF Core Funds"
+      ]
+    },
+    {
+      "field": "STARTDATE",
+      "nonNull": 30719,
+      "missing": 34,
+      "inferredType": "text",
+      "examples": [
+        "2007/6/1",
+        "2008/1/1"
+      ]
+    },
+    {
+      "field": "ENDDATE",
+      "nonNull": 30694,
+      "missing": 59,
+      "inferredType": "text",
+      "examples": [
+        "2009/7/31",
+        "2009/12/31"
+      ]
+    },
+    {
+      "field": "MOASIGNEDDATE",
+      "nonNull": 30099,
+      "missing": 654,
+      "inferredType": "text",
+      "examples": [
+        "2007-07-18",
+        "2007-07-07",
+        "2007-12-26"
+      ]
+    }
+  ],
+  "cofinancing": [
+    {
+      "field": "PROJECTNUMBER",
+      "nonNull": 56808,
+      "missing": 0,
+      "inferredType": "text",
+      "examples": [
+        "BEN/ OP3/ 02/ 07/ 02",
+        "BEN/ OP3/ 02/ 07/ 01",
+        "BEN/ OP3/ 02/ 07/ 03"
+      ]
+    },
+    {
+      "field": "OPERATIONALPHASETXT",
+      "nonNull": 56808,
+      "missing": 0,
+      "inferredType": "text",
+      "examples": [
+        "OP3 - Y2 (Mar 06 - Jun 07)"
+      ]
+    },
+    {
+      "field": "PROJECTTITLE",
+      "nonNull": 56808,
+      "missing": 0,
+      "inferredType": "text",
+      "examples": [
+        "Promotion du pourghère (Jatropha curcas) par les groupements féminins et sensibilisation à l'utilisation de son huile comme biocarburant dans les villages de Dotan et Avobgana au Bénin",
+        "Promotion et vulgarisation des foyers économiques et autocuiseurs dans la commune de Zangnanado pour la lutte contre la déforestation et la réduction des effets des changements climatiques",
+        "Sauvegarde des tortues marines de l'Atlantique et de leurs habitats le long du littoral du Bénin"
+      ]
+    },
+    {
+      "field": "REGIONID",
+      "nonNull": 56808,
+      "missing": 0,
+      "inferredType": "text",
+      "examples": [
+        "RBA"
+      ]
+    },
+    {
+      "field": "GRANTAMOUNT",
+      "nonNull": 56808,
+      "missing": 0,
+      "inferredType": "number",
+      "examples": [
+        "50000",
+        "49924",
+        "49998"
+      ]
+    },
+    {
+      "field": "COUNTRYNAME",
+      "nonNull": 56808,
+      "missing": 0,
+      "inferredType": "text",
+      "examples": [
+        "BENIN"
+      ]
+    },
+    {
+      "field": "FOCALAREA",
+      "nonNull": 56782,
+      "missing": 26,
+      "inferredType": "text",
+      "examples": [
+        "Climate Change",
+        "Biodiversity"
+      ]
+    },
+    {
+      "field": "STARTMONTH",
+      "nonNull": 56775,
+      "missing": 33,
+      "inferredType": "number",
+      "examples": [
+        "6"
+      ]
+    },
+    {
+      "field": "STARTYEAR",
+      "nonNull": 56776,
+      "missing": 32,
+      "inferredType": "number",
+      "examples": [
+        "2007"
+      ]
+    },
+    {
+      "field": "COMPANYTITLE",
+      "nonNull": 56807,
+      "missing": 1,
+      "inferredType": "text",
+      "examples": [
+        "Groupe d'Echanges de savoir faire et d'Appui aux Initiatives rurales de Développement",
+        "Populations bénéficiaires",
+        "Organisation des Femmes pour la Gestion de l'Energie, de l'Environnement et la Promotion du Développement Intégré",
+        "Nature Tropicale"
+      ]
+    },
+    {
+      "field": "COMPANYTYPETXT",
+      "nonNull": 56721,
+      "missing": 87,
+      "inferredType": "text",
+      "examples": [
+        "National NGO",
+        "Grantee"
+      ]
+    },
+    {
+      "field": "COMPANYCOUNTRYID",
+      "nonNull": 42479,
+      "missing": 14329,
+      "inferredType": "text",
+      "examples": [
+        "BEN"
+      ]
+    },
+    {
+      "field": "COMPANYCOUNTRYNAME",
+      "nonNull": 42477,
+      "missing": 14331,
+      "inferredType": "text",
+      "examples": [
+        "BENIN"
+      ]
+    },
+    {
+      "field": "AMOUNTCASH",
+      "nonNull": 53725,
+      "missing": 3083,
+      "inferredType": "number",
+      "examples": [
+        "9478",
+        "0",
+        "7109",
+        "4739"
+      ]
+    },
+    {
+      "field": "AMOUNTKIND",
+      "nonNull": 54880,
+      "missing": 1928,
+      "inferredType": "number",
+      "examples": [
+        "9829",
+        "18886",
+        "4929",
+        "24810",
+        "7109"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1454 @@
+{
+  "generatedAt": "2026-06-17T23:34:49.146Z",
+  "sourceFiles": {
+    "projects": "data/raw/sgp_projects.xls",
+    "cofinancing": "data/raw/sgp_cofinancing.xls",
+    "geojson": "data/geo/world-countries.geojson"
+  },
+  "counts": {
+    "projectRecords": 30753,
+    "uniqueProjectNumbers": 30696,
+    "cofinancingRows": 56808,
+    "uniqueCofinancingProjectNumbers": 29240,
+    "countries": 136,
+    "mappedCountries": 134
+  },
+  "totals": {
+    "grantAmount": 872211519.02,
+    "cofinancingCash": 440797301.77,
+    "cofinancingKind": 579775852.78,
+    "cofinancingTotal": 1020573154.55,
+    "totalInvestment": 1892784673.57,
+    "detailCash": 440797301.77,
+    "detailKind": 579775852.78
+  },
+  "checks": [
+    {
+      "label": "Project records",
+      "expected": 30753,
+      "actual": 30753,
+      "passed": true,
+      "tolerance": 0
+    },
+    {
+      "label": "Unique project numbers",
+      "expected": 30696,
+      "actual": 30696,
+      "passed": true,
+      "tolerance": 0
+    },
+    {
+      "label": "Cofinancing rows",
+      "expected": 56808,
+      "actual": 56808,
+      "passed": true,
+      "tolerance": 0
+    },
+    {
+      "label": "Unique cofinancing project numbers",
+      "expected": 29240,
+      "actual": 29240,
+      "passed": true,
+      "tolerance": 0
+    },
+    {
+      "label": "Duplicate PROJECTNUMBER groups",
+      "expected": 50,
+      "actual": 50,
+      "passed": true,
+      "tolerance": 0
+    },
+    {
+      "label": "Project numbers without detailed cofinancing",
+      "expected": 1456,
+      "actual": 1456,
+      "passed": true,
+      "tolerance": 0
+    },
+    {
+      "label": "Cofinancing project numbers missing from projects",
+      "expected": 0,
+      "actual": 0,
+      "passed": true,
+      "tolerance": 0
+    },
+    {
+      "label": "Row-level cofinancing mismatch cases",
+      "expected": 60,
+      "actual": 60,
+      "passed": true,
+      "tolerance": 0
+    },
+    {
+      "label": "Project grant total",
+      "expected": 872211519.02,
+      "actual": 872211519.02,
+      "passed": true,
+      "tolerance": 0.01
+    },
+    {
+      "label": "Project cash cofinancing total",
+      "expected": 440797301.77,
+      "actual": 440797301.77,
+      "passed": true,
+      "tolerance": 0.01
+    },
+    {
+      "label": "Project in-kind cofinancing total",
+      "expected": 579775852.78,
+      "actual": 579775852.78,
+      "passed": true,
+      "tolerance": 0.01
+    },
+    {
+      "label": "Detail cash cofinancing total",
+      "expected": 440797301.77,
+      "actual": 440797301.77,
+      "passed": true,
+      "tolerance": 0.01
+    },
+    {
+      "label": "Detail in-kind cofinancing total",
+      "expected": 579775852.78,
+      "actual": 579775852.78,
+      "passed": true,
+      "tolerance": 0.01
+    }
+  ],
+  "missingness": {
+    "projects": {
+      "PROJECTNUMBER": 0,
+      "OPERATIONALPHASETXT": 0,
+      "FULLGRANT": 0,
+      "PROJECTCATEGORYTXT": 0,
+      "PROJECTTITLE": 0,
+      "REGIONID": 0,
+      "GRANTAMOUNT": 0,
+      "COUNTRYNAME": 0,
+      "INSTITUTIONALTYPETXT": 84,
+      "COMPANYTITLE": 84,
+      "FOCALAREA": 49,
+      "PROJECTSTATUSTXT": 0,
+      "STARTMONTH": 34,
+      "STARTYEAR": 33,
+      "COFINANCINGAMOUNTCASH": 1980,
+      "COFINANCINGAMOUNTKIND": 1683,
+      "NSCAPPROVALDATE": 12894,
+      "FUNDINGSOURCE": 52,
+      "STARTDATE": 34,
+      "ENDDATE": 59,
+      "MOASIGNEDDATE": 654
+    },
+    "cofinancing": {
+      "PROJECTNUMBER": 0,
+      "OPERATIONALPHASETXT": 0,
+      "PROJECTTITLE": 0,
+      "REGIONID": 0,
+      "GRANTAMOUNT": 0,
+      "COUNTRYNAME": 0,
+      "FOCALAREA": 26,
+      "STARTMONTH": 33,
+      "STARTYEAR": 32,
+      "COMPANYTITLE": 1,
+      "COMPANYTYPETXT": 87,
+      "COMPANYCOUNTRYID": 14329,
+      "COMPANYCOUNTRYNAME": 14331,
+      "AMOUNTCASH": 3083,
+      "AMOUNTKIND": 1928
+    }
+  },
+  "duplicateProjectNumberGroups": [
+    {
+      "projectNumberNormalized": "PIMS-10239 GEF SGP 8th Operational Phase (Part 1)",
+      "count": 8,
+      "rowIds": [
+        "p_018041",
+        "p_018042",
+        "p_018043",
+        "p_018045",
+        "p_018046",
+        "p_018047",
+        "p_018048",
+        "p_018049"
+      ],
+      "countries": [
+        "PALESTINE, STATE OF"
+      ],
+      "grantAmount": 395000,
+      "cofinancingTotal": 607715
+    },
+    {
+      "projectNumberNormalized": "CHD/SGP/OP5/CORE/BD/12/005",
+      "count": 3,
+      "rowIds": [
+        "p_001351",
+        "p_001357",
+        "p_001361"
+      ],
+      "countries": [
+        "CHAD"
+      ],
+      "grantAmount": 50750,
+      "cofinancingTotal": 0
+    },
+    {
+      "projectNumberNormalized": "BOT/98/G52/05/02",
+      "count": 2,
+      "rowIds": [
+        "p_000333",
+        "p_000334"
+      ],
+      "countries": [
+        "BOTSWANA"
+      ],
+      "grantAmount": 50017.31,
+      "cofinancingTotal": 191184.8
+    },
+    {
+      "projectNumberNormalized": "CHD/SGP/OP5/CORE/BD/12/002",
+      "count": 2,
+      "rowIds": [
+        "p_001333",
+        "p_001334"
+      ],
+      "countries": [
+        "CHAD"
+      ],
+      "grantAmount": 62270,
+      "cofinancingTotal": 0
+    },
+    {
+      "projectNumberNormalized": "CHD/SGP/OP5/CORE/BD/12/003",
+      "count": 2,
+      "rowIds": [
+        "p_001350",
+        "p_001353"
+      ],
+      "countries": [
+        "CHAD"
+      ],
+      "grantAmount": 45932,
+      "cofinancingTotal": 0
+    },
+    {
+      "projectNumberNormalized": "CHD/SGP/OP5/CORE/BD/12/006",
+      "count": 2,
+      "rowIds": [
+        "p_001354",
+        "p_001358"
+      ],
+      "countries": [
+        "CHAD"
+      ],
+      "grantAmount": 48629,
+      "cofinancingTotal": 0
+    },
+    {
+      "projectNumberNormalized": "CHD/SGP/OP5/CORE/LD/12/001",
+      "count": 2,
+      "rowIds": [
+        "p_001347",
+        "p_001363"
+      ],
+      "countries": [
+        "CHAD"
+      ],
+      "grantAmount": 16030,
+      "cofinancingTotal": 0
+    },
+    {
+      "projectNumberNormalized": "CHD/SGP/OP5/Y2/CORE/BD/12/006",
+      "count": 2,
+      "rowIds": [
+        "p_001330",
+        "p_001339"
+      ],
+      "countries": [
+        "CHAD"
+      ],
+      "grantAmount": 30000,
+      "cofinancingTotal": 0
+    },
+    {
+      "projectNumberNormalized": "CIV/SGP/OP6/Y4/CORE/BD/19/02",
+      "count": 2,
+      "rowIds": [
+        "p_002093",
+        "p_002102"
+      ],
+      "countries": [
+        "CÔTE D'IVOIRE"
+      ],
+      "grantAmount": 22099.76,
+      "cofinancingTotal": 7054.34
+    },
+    {
+      "projectNumberNormalized": "CIV/SGP/OP6/Y4/CORE/BD/19/04",
+      "count": 2,
+      "rowIds": [
+        "p_002099",
+        "p_002104"
+      ],
+      "countries": [
+        "CÔTE D'IVOIRE"
+      ],
+      "grantAmount": 21395.28,
+      "cofinancingTotal": 67981.53
+    },
+    {
+      "projectNumberNormalized": "CIV/SGP/OP6/Y4/CORE/CC/19/08",
+      "count": 2,
+      "rowIds": [
+        "p_002101",
+        "p_002106"
+      ],
+      "countries": [
+        "CÔTE D'IVOIRE"
+      ],
+      "grantAmount": 20697.64,
+      "cofinancingTotal": 9480.6
+    },
+    {
+      "projectNumberNormalized": "CIV/SGP/OP6/Y4/CORE/CC/19/11",
+      "count": 2,
+      "rowIds": [
+        "p_002096",
+        "p_002103"
+      ],
+      "countries": [
+        "CÔTE D'IVOIRE"
+      ],
+      "grantAmount": 22963.53,
+      "cofinancingTotal": 6626.71
+    },
+    {
+      "projectNumberNormalized": "CIV/SGP/OP6/Y4/CORE/CC/19/12",
+      "count": 2,
+      "rowIds": [
+        "p_002100",
+        "p_002105"
+      ],
+      "countries": [
+        "CÔTE D'IVOIRE"
+      ],
+      "grantAmount": 16963.53,
+      "cofinancingTotal": 14689.06
+    },
+    {
+      "projectNumberNormalized": "CKI/NZD/OP4/Yr-4/08/02",
+      "count": 2,
+      "rowIds": [
+        "p_009883",
+        "p_014559"
+      ],
+      "countries": [
+        "COOK ISLANDS",
+        "SAMOA"
+      ],
+      "grantAmount": 40000,
+      "cofinancingTotal": 7500
+    },
+    {
+      "projectNumberNormalized": "CKI/NZD/OP4/Yr-4/10/03",
+      "count": 2,
+      "rowIds": [
+        "p_009890",
+        "p_014590"
+      ],
+      "countries": [
+        "COOK ISLANDS",
+        "SAMOA"
+      ],
+      "grantAmount": 100000,
+      "cofinancingTotal": 20300
+    },
+    {
+      "projectNumberNormalized": "CKI/OP3/Yr1/06/02",
+      "count": 2,
+      "rowIds": [
+        "p_009880",
+        "p_014536"
+      ],
+      "countries": [
+        "COOK ISLANDS",
+        "SAMOA"
+      ],
+      "grantAmount": 36000,
+      "cofinancingTotal": 0
+    },
+    {
+      "projectNumberNormalized": "CKI/SGP/OP4/CORE/08/03",
+      "count": 2,
+      "rowIds": [
+        "p_009881",
+        "p_014545"
+      ],
+      "countries": [
+        "COOK ISLANDS",
+        "SAMOA"
+      ],
+      "grantAmount": 72390,
+      "cofinancingTotal": 10130
+    },
+    {
+      "projectNumberNormalized": "CKI/SGP/OP4/CORE/08/06",
+      "count": 2,
+      "rowIds": [
+        "p_009884",
+        "p_014558"
+      ],
+      "countries": [
+        "COOK ISLANDS",
+        "SAMOA"
+      ],
+      "grantAmount": 56270,
+      "cofinancingTotal": 10340
+    },
+    {
+      "projectNumberNormalized": "CKI/SGP/OP4/CORE/09/04",
+      "count": 2,
+      "rowIds": [
+        "p_009891",
+        "p_014598"
+      ],
+      "countries": [
+        "COOK ISLANDS",
+        "SAMOA"
+      ],
+      "grantAmount": 100000,
+      "cofinancingTotal": 94640
+    },
+    {
+      "projectNumberNormalized": "COK/SGP/OP4/CORE/10/05",
+      "count": 2,
+      "rowIds": [
+        "p_009887",
+        "p_014599"
+      ],
+      "countries": [
+        "COOK ISLANDS",
+        "SAMOA"
+      ],
+      "grantAmount": 100000,
+      "cofinancingTotal": 80000
+    },
+    {
+      "projectNumberNormalized": "COS/SGP/OP4/CORE/07/14",
+      "count": 2,
+      "rowIds": [
+        "p_024648",
+        "p_024649"
+      ],
+      "countries": [
+        "COSTA RICA"
+      ],
+      "grantAmount": 25433,
+      "cofinancingTotal": 61866.13
+    },
+    {
+      "projectNumberNormalized": "COS/SGP/OP4/Y2/CORE/08/07",
+      "count": 2,
+      "rowIds": [
+        "p_024671",
+        "p_024672"
+      ],
+      "countries": [
+        "COSTA RICA"
+      ],
+      "grantAmount": 40000,
+      "cofinancingTotal": 20958.2
+    },
+    {
+      "projectNumberNormalized": "CWI/MAU/07/03",
+      "count": 2,
+      "rowIds": [
+        "p_005371",
+        "p_005381"
+      ],
+      "countries": [
+        "MAURITANIA"
+      ],
+      "grantAmount": 22996,
+      "cofinancingTotal": 32175
+    },
+    {
+      "projectNumberNormalized": "DRC/SGP/OP8/Y1/CORE/POP/2025/3",
+      "count": 2,
+      "rowIds": [
+        "p_001844",
+        "p_001855"
+      ],
+      "countries": [
+        "CONGO (DEMOCRATIC REPUBLIC OF THE)"
+      ],
+      "grantAmount": 35000,
+      "cofinancingTotal": 0
+    },
+    {
+      "projectNumberNormalized": "DRC/SGP/OP8/Y1/STAR/BD/2025/4",
+      "count": 2,
+      "rowIds": [
+        "p_001856",
+        "p_001857"
+      ],
+      "countries": [
+        "CONGO (DEMOCRATIC REPUBLIC OF THE)"
+      ],
+      "grantAmount": 80000,
+      "cofinancingTotal": 0
+    },
+    {
+      "projectNumberNormalized": "DRC/SGP/OP8/Y1/STAR/LD/2025/2",
+      "count": 2,
+      "rowIds": [
+        "p_001865",
+        "p_001866"
+      ],
+      "countries": [
+        "CONGO (DEMOCRATIC REPUBLIC OF THE)"
+      ],
+      "grantAmount": 80000,
+      "cofinancingTotal": 0
+    },
+    {
+      "projectNumberNormalized": "ECU/05/006",
+      "count": 2,
+      "rowIds": [
+        "p_026112",
+        "p_026113"
+      ],
+      "countries": [
+        "ECUADOR"
+      ],
+      "grantAmount": 50000,
+      "cofinancingTotal": 25000
+    },
+    {
+      "projectNumberNormalized": "HND/SGP/OP4/CORE/07/05",
+      "count": 2,
+      "rowIds": [
+        "p_027431",
+        "p_027435"
+      ],
+      "countries": [
+        "HONDURAS"
+      ],
+      "grantAmount": 38000,
+      "cofinancingTotal": 33928.86
+    },
+    {
+      "projectNumberNormalized": "HND/SGP/OP4/CORE/08/03",
+      "count": 2,
+      "rowIds": [
+        "p_027441",
+        "p_027443"
+      ],
+      "countries": [
+        "HONDURAS"
+      ],
+      "grantAmount": 55000,
+      "cofinancingTotal": 69868.42
+    },
+    {
+      "projectNumberNormalized": "IND/SGP/OP7/Y6/CORE/CC/2025/71",
+      "count": 2,
+      "rowIds": [
+        "p_010487",
+        "p_010488"
+      ],
+      "countries": [
+        "INDIA"
+      ],
+      "grantAmount": 76086,
+      "cofinancingTotal": 0
+    },
+    {
+      "projectNumberNormalized": "INS/SGP/OP7/Y2/STAR/BD/24/064",
+      "count": 2,
+      "rowIds": [
+        "p_011147",
+        "p_011148"
+      ],
+      "countries": [
+        "INDONESIA"
+      ],
+      "grantAmount": 100000,
+      "cofinancingTotal": 50045
+    },
+    {
+      "projectNumberNormalized": "KEN/SGP/OP5/FSP/BD/13/07",
+      "count": 2,
+      "rowIds": [
+        "p_003657",
+        "p_003664"
+      ],
+      "countries": [
+        "KENYA"
+      ],
+      "grantAmount": 188530,
+      "cofinancingTotal": 39647.34
+    },
+    {
+      "projectNumberNormalized": "KHM/SGP/CCBAP-Sida/2011/28",
+      "count": 2,
+      "rowIds": [
+        "p_009505",
+        "p_009552"
+      ],
+      "countries": [
+        "CAMBODIA"
+      ],
+      "grantAmount": 88914.9,
+      "cofinancingTotal": 105900
+    },
+    {
+      "projectNumberNormalized": "KHM/SGP/CCBAP-Sida/2014/01",
+      "count": 2,
+      "rowIds": [
+        "p_009473",
+        "p_009477"
+      ],
+      "countries": [
+        "CAMBODIA"
+      ],
+      "grantAmount": 63601.2,
+      "cofinancingTotal": 42144.3
+    },
+    {
+      "projectNumberNormalized": "LBR/SGP/OP7/Y1/CORE/WOMEN/2020/36",
+      "count": 2,
+      "rowIds": [
+        "p_004261",
+        "p_004262"
+      ],
+      "countries": [
+        "LIBERIA"
+      ],
+      "grantAmount": 30000,
+      "cofinancingTotal": 3000
+    },
+    {
+      "projectNumberNormalized": "MLI/00/15",
+      "count": 2,
+      "rowIds": [
+        "p_005240",
+        "p_005288"
+      ],
+      "countries": [
+        "MALI"
+      ],
+      "grantAmount": 39517.07,
+      "cofinancingTotal": 29859
+    },
+    {
+      "projectNumberNormalized": "NAM/SGP/OP7/CORE/CPS/2025/01",
+      "count": 2,
+      "rowIds": [
+        "p_006343",
+        "p_006344"
+      ],
+      "countries": [
+        "NAMIBIA"
+      ],
+      "grantAmount": 10000,
+      "cofinancingTotal": 0
+    },
+    {
+      "projectNumberNormalized": "PHI/SGP/OP5/Y5/FSP/STAR/BD/2016/31",
+      "count": 2,
+      "rowIds": [
+        "p_014275",
+        "p_014276"
+      ],
+      "countries": [
+        "PHILIPPINES"
+      ],
+      "grantAmount": 97560.96,
+      "cofinancingTotal": 0
+    },
+    {
+      "projectNumberNormalized": "POL/00/03p",
+      "count": 2,
+      "rowIds": [
+        "p_020752",
+        "p_020753"
+      ],
+      "countries": [
+        "POLAND"
+      ],
+      "grantAmount": 1890,
+      "cofinancingTotal": 0
+    },
+    {
+      "projectNumberNormalized": "Poly-NI/Yr-1/OP3/07/01",
+      "count": 2,
+      "rowIds": [
+        "p_013477",
+        "p_014525"
+      ],
+      "countries": [
+        "NIUE",
+        "SAMOA"
+      ],
+      "grantAmount": 27606,
+      "cofinancingTotal": 36528
+    },
+    {
+      "projectNumberNormalized": "Poly-NI/Yr-1/OP3/07/02",
+      "count": 2,
+      "rowIds": [
+        "p_013476",
+        "p_014524"
+      ],
+      "countries": [
+        "NIUE",
+        "SAMOA"
+      ],
+      "grantAmount": 28572,
+      "cofinancingTotal": 8214
+    },
+    {
+      "projectNumberNormalized": "Poly-NI/Yr-1/OP3/07/04",
+      "count": 2,
+      "rowIds": [
+        "p_013479",
+        "p_014534"
+      ],
+      "countries": [
+        "NIUE",
+        "SAMOA"
+      ],
+      "grantAmount": 24286,
+      "cofinancingTotal": 3857
+    },
+    {
+      "projectNumberNormalized": "Poly-NI/Yr-1/OP3/07/05",
+      "count": 2,
+      "rowIds": [
+        "p_013478",
+        "p_014527"
+      ],
+      "countries": [
+        "NIUE",
+        "SAMOA"
+      ],
+      "grantAmount": 3000,
+      "cofinancingTotal": 857
+    },
+    {
+      "projectNumberNormalized": "TOK/OP3/Yr-1/07/01",
+      "count": 2,
+      "rowIds": [
+        "p_014520",
+        "p_016177"
+      ],
+      "countries": [
+        "SAMOA",
+        "TOKELAU"
+      ],
+      "grantAmount": 68074,
+      "cofinancingTotal": 53529
+    },
+    {
+      "projectNumberNormalized": "TUR/SGP/OP5/Y2/STAR/CC/12/02",
+      "count": 2,
+      "rowIds": [
+        "p_021233",
+        "p_021251"
+      ],
+      "countries": [
+        "TÜRKIYE"
+      ],
+      "grantAmount": 45590,
+      "cofinancingTotal": 91960
+    },
+    {
+      "projectNumberNormalized": "VNM/COMDEKS-4/2024/02",
+      "count": 2,
+      "rowIds": [
+        "p_016655",
+        "p_016661"
+      ],
+      "countries": [
+        "VIET NAM"
+      ],
+      "grantAmount": 45000,
+      "cofinancingTotal": 7577
+    },
+    {
+      "projectNumberNormalized": "VNM/SGP/OP7/Y4/CORE/2024/01",
+      "count": 2,
+      "rowIds": [
+        "p_016649",
+        "p_016664"
+      ],
+      "countries": [
+        "VIET NAM"
+      ],
+      "grantAmount": 50000,
+      "cofinancingTotal": 94877
+    },
+    {
+      "projectNumberNormalized": "VUT/SGP/OP7/STAR/LD/23/14",
+      "count": 2,
+      "rowIds": [
+        "p_016418",
+        "p_016420"
+      ],
+      "countries": [
+        "VANUATU"
+      ],
+      "grantAmount": 58500,
+      "cofinancingTotal": 45000
+    },
+    {
+      "projectNumberNormalized": "WSM/SGP/OP7/Y4/CORE/IW/2025/14",
+      "count": 2,
+      "rowIds": [
+        "p_014789",
+        "p_014790"
+      ],
+      "countries": [
+        "SAMOA"
+      ],
+      "grantAmount": 71686,
+      "cofinancingTotal": 0
+    },
+    {
+      "projectNumberNormalized": "WSM/SGP/OP8/Y1/CORE/CC/2025/01",
+      "count": 2,
+      "rowIds": [
+        "p_014810",
+        "p_014811"
+      ],
+      "countries": [
+        "SAMOA"
+      ],
+      "grantAmount": 50471,
+      "cofinancingTotal": 0
+    }
+  ],
+  "cofinancingMismatches": [
+    {
+      "rowId": "p_000333",
+      "projectNumberNormalized": "BOT/98/G52/05/02",
+      "projectCash": 1500,
+      "projectKind": 156271,
+      "detailCash": 28913.8,
+      "detailKind": 162271,
+      "countryName": "BOTSWANA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_000334",
+      "projectNumberNormalized": "BOT/98/G52/05/02",
+      "projectCash": 27413.8,
+      "projectKind": 6000,
+      "detailCash": 28913.8,
+      "detailKind": 162271,
+      "countryName": "BOTSWANA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_002093",
+      "projectNumberNormalized": "CIV/SGP/OP6/Y4/CORE/BD/19/02",
+      "projectCash": 0,
+      "projectKind": 2254.34,
+      "detailCash": 0,
+      "detailKind": 7054.34,
+      "countryName": "CÔTE D'IVOIRE",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_002096",
+      "projectNumberNormalized": "CIV/SGP/OP6/Y4/CORE/CC/19/11",
+      "projectCash": 0,
+      "projectKind": 1792.71,
+      "detailCash": 2667,
+      "detailKind": 3959.71,
+      "countryName": "CÔTE D'IVOIRE",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_002099",
+      "projectNumberNormalized": "CIV/SGP/OP6/Y4/CORE/BD/19/04",
+      "projectCash": 9100.6,
+      "projectKind": 2080.93,
+      "detailCash": 44100.6,
+      "detailKind": 23880.93,
+      "countryName": "CÔTE D'IVOIRE",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_002100",
+      "projectNumberNormalized": "CIV/SGP/OP6/Y4/CORE/CC/19/12",
+      "projectCash": 0,
+      "projectKind": 2689.06,
+      "detailCash": 2500,
+      "detailKind": 12189.06,
+      "countryName": "CÔTE D'IVOIRE",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_002101",
+      "projectNumberNormalized": "CIV/SGP/OP6/Y4/CORE/CC/19/08",
+      "projectCash": 0,
+      "projectKind": 2080.6,
+      "detailCash": 1800,
+      "detailKind": 7680.6,
+      "countryName": "CÔTE D'IVOIRE",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_002102",
+      "projectNumberNormalized": "CIV/SGP/OP6/Y4/CORE/BD/19/02",
+      "projectCash": 0,
+      "projectKind": 4800,
+      "detailCash": 0,
+      "detailKind": 7054.34,
+      "countryName": "CÔTE D'IVOIRE",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_002103",
+      "projectNumberNormalized": "CIV/SGP/OP6/Y4/CORE/CC/19/11",
+      "projectCash": 2667,
+      "projectKind": 2167,
+      "detailCash": 2667,
+      "detailKind": 3959.71,
+      "countryName": "CÔTE D'IVOIRE",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_002104",
+      "projectNumberNormalized": "CIV/SGP/OP6/Y4/CORE/BD/19/04",
+      "projectCash": 35000,
+      "projectKind": 21800,
+      "detailCash": 44100.6,
+      "detailKind": 23880.93,
+      "countryName": "CÔTE D'IVOIRE",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_002105",
+      "projectNumberNormalized": "CIV/SGP/OP6/Y4/CORE/CC/19/12",
+      "projectCash": 2500,
+      "projectKind": 9500,
+      "detailCash": 2500,
+      "detailKind": 12189.06,
+      "countryName": "CÔTE D'IVOIRE",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_002106",
+      "projectNumberNormalized": "CIV/SGP/OP6/Y4/CORE/CC/19/08",
+      "projectCash": 1800,
+      "projectKind": 5600,
+      "detailCash": 1800,
+      "detailKind": 7680.6,
+      "countryName": "CÔTE D'IVOIRE",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_003657",
+      "projectNumberNormalized": "KEN/SGP/OP5/FSP/BD/13/07",
+      "projectCash": 0,
+      "projectKind": 0,
+      "detailCash": 0,
+      "detailKind": 39647.34,
+      "countryName": "KENYA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_004261",
+      "projectNumberNormalized": "LBR/SGP/OP7/Y1/CORE/WOMEN/2020/36",
+      "projectCash": 0,
+      "projectKind": 1500,
+      "detailCash": 0,
+      "detailKind": 3000,
+      "countryName": "LIBERIA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_004262",
+      "projectNumberNormalized": "LBR/SGP/OP7/Y1/CORE/WOMEN/2020/36",
+      "projectCash": 0,
+      "projectKind": 1500,
+      "detailCash": 0,
+      "detailKind": 3000,
+      "countryName": "LIBERIA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_005240",
+      "projectNumberNormalized": "MLI/00/15",
+      "projectCash": 0,
+      "projectKind": 27273,
+      "detailCash": 0,
+      "detailKind": 29859,
+      "countryName": "MALI",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_005288",
+      "projectNumberNormalized": "MLI/00/15",
+      "projectCash": 0,
+      "projectKind": 2586,
+      "detailCash": 0,
+      "detailKind": 29859,
+      "countryName": "MALI",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_005371",
+      "projectNumberNormalized": "CWI/MAU/07/03",
+      "projectCash": 18702,
+      "projectKind": 8473,
+      "detailCash": 18702,
+      "detailKind": 13473,
+      "countryName": "MAURITANIA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_005381",
+      "projectNumberNormalized": "CWI/MAU/07/03",
+      "projectCash": 0,
+      "projectKind": 5000,
+      "detailCash": 18702,
+      "detailKind": 13473,
+      "countryName": "MAURITANIA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_009473",
+      "projectNumberNormalized": "KHM/SGP/CCBAP-Sida/2014/01",
+      "projectCash": 5250,
+      "projectKind": 10699.3,
+      "detailCash": 26335,
+      "detailKind": 15809.3,
+      "countryName": "CAMBODIA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_009477",
+      "projectNumberNormalized": "KHM/SGP/CCBAP-Sida/2014/01",
+      "projectCash": 21085,
+      "projectKind": 5110,
+      "detailCash": 26335,
+      "detailKind": 15809.3,
+      "countryName": "CAMBODIA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_009505",
+      "projectNumberNormalized": "KHM/SGP/CCBAP-Sida/2011/28",
+      "projectCash": 72063,
+      "projectKind": 0,
+      "detailCash": 95425,
+      "detailKind": 10475,
+      "countryName": "CAMBODIA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_009552",
+      "projectNumberNormalized": "KHM/SGP/CCBAP-Sida/2011/28",
+      "projectCash": 23362,
+      "projectKind": 10475,
+      "detailCash": 95425,
+      "detailKind": 10475,
+      "countryName": "CAMBODIA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_009881",
+      "projectNumberNormalized": "CKI/SGP/OP4/CORE/08/03",
+      "projectCash": 0,
+      "projectKind": 0,
+      "detailCash": 0,
+      "detailKind": 10130,
+      "countryName": "COOK ISLANDS",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_009883",
+      "projectNumberNormalized": "CKI/NZD/OP4/Yr-4/08/02",
+      "projectCash": 0,
+      "projectKind": 0,
+      "detailCash": 0,
+      "detailKind": 7500,
+      "countryName": "COOK ISLANDS",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_009884",
+      "projectNumberNormalized": "CKI/SGP/OP4/CORE/08/06",
+      "projectCash": 5170,
+      "projectKind": 0,
+      "detailCash": 5170,
+      "detailKind": 5170,
+      "countryName": "COOK ISLANDS",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_009887",
+      "projectNumberNormalized": "COK/SGP/OP4/CORE/10/05",
+      "projectCash": 40000,
+      "projectKind": 0,
+      "detailCash": 40000,
+      "detailKind": 40000,
+      "countryName": "COOK ISLANDS",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_009890",
+      "projectNumberNormalized": "CKI/NZD/OP4/Yr-4/10/03",
+      "projectCash": 0,
+      "projectKind": 0,
+      "detailCash": 0,
+      "detailKind": 20300,
+      "countryName": "COOK ISLANDS",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_009891",
+      "projectNumberNormalized": "CKI/SGP/OP4/CORE/09/04",
+      "projectCash": 47320,
+      "projectKind": 0,
+      "detailCash": 47320,
+      "detailKind": 47320,
+      "countryName": "COOK ISLANDS",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_011148",
+      "projectNumberNormalized": "INS/SGP/OP7/Y2/STAR/BD/24/064",
+      "projectCash": 0,
+      "projectKind": 0,
+      "detailCash": 0,
+      "detailKind": 50045,
+      "countryName": "INDONESIA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_013476",
+      "projectNumberNormalized": "Poly-NI/Yr-1/OP3/07/02",
+      "projectCash": 0,
+      "projectKind": 0,
+      "detailCash": 0,
+      "detailKind": 8214,
+      "countryName": "NIUE",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_013477",
+      "projectNumberNormalized": "Poly-NI/Yr-1/OP3/07/01",
+      "projectCash": 0,
+      "projectKind": 0,
+      "detailCash": 0,
+      "detailKind": 36528,
+      "countryName": "NIUE",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_013478",
+      "projectNumberNormalized": "Poly-NI/Yr-1/OP3/07/05",
+      "projectCash": 0,
+      "projectKind": 0,
+      "detailCash": 145,
+      "detailKind": 712,
+      "countryName": "NIUE",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_013479",
+      "projectNumberNormalized": "Poly-NI/Yr-1/OP3/07/04",
+      "projectCash": 0,
+      "projectKind": 0,
+      "detailCash": 0,
+      "detailKind": 3857,
+      "countryName": "NIUE",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_014558",
+      "projectNumberNormalized": "CKI/SGP/OP4/CORE/08/06",
+      "projectCash": 0,
+      "projectKind": 5170,
+      "detailCash": 5170,
+      "detailKind": 5170,
+      "countryName": "SAMOA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_014598",
+      "projectNumberNormalized": "CKI/SGP/OP4/CORE/09/04",
+      "projectCash": 0,
+      "projectKind": 47320,
+      "detailCash": 47320,
+      "detailKind": 47320,
+      "countryName": "SAMOA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_014599",
+      "projectNumberNormalized": "COK/SGP/OP4/CORE/10/05",
+      "projectCash": 0,
+      "projectKind": 40000,
+      "detailCash": 40000,
+      "detailKind": 40000,
+      "countryName": "SAMOA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_016177",
+      "projectNumberNormalized": "TOK/OP3/Yr-1/07/01",
+      "projectCash": 0,
+      "projectKind": 0,
+      "detailCash": 0,
+      "detailKind": 53529,
+      "countryName": "TOKELAU",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_016418",
+      "projectNumberNormalized": "VUT/SGP/OP7/STAR/LD/23/14",
+      "projectCash": 0,
+      "projectKind": 0,
+      "detailCash": 0,
+      "detailKind": 45000,
+      "countryName": "VANUATU",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_016649",
+      "projectNumberNormalized": "VNM/SGP/OP7/Y4/CORE/2024/01",
+      "projectCash": 0,
+      "projectKind": 53655,
+      "detailCash": 0,
+      "detailKind": 94877,
+      "countryName": "VIET NAM",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_016655",
+      "projectNumberNormalized": "VNM/COMDEKS-4/2024/02",
+      "projectCash": 0,
+      "projectKind": 0,
+      "detailCash": 0,
+      "detailKind": 7577,
+      "countryName": "VIET NAM",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_016664",
+      "projectNumberNormalized": "VNM/SGP/OP7/Y4/CORE/2024/01",
+      "projectCash": 0,
+      "projectKind": 41222,
+      "detailCash": 0,
+      "detailKind": 94877,
+      "countryName": "VIET NAM",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_018041",
+      "projectNumberNormalized": "PIMS-10239 GEF SGP 8th Operational Phase (Part 1)",
+      "projectCash": 0,
+      "projectKind": 45000,
+      "detailCash": 141415,
+      "detailKind": 466300,
+      "countryName": "PALESTINE, STATE OF",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_018042",
+      "projectNumberNormalized": "PIMS-10239 GEF SGP 8th Operational Phase (Part 1)",
+      "projectCash": 0,
+      "projectKind": 300000,
+      "detailCash": 141415,
+      "detailKind": 466300,
+      "countryName": "PALESTINE, STATE OF",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_018043",
+      "projectNumberNormalized": "PIMS-10239 GEF SGP 8th Operational Phase (Part 1)",
+      "projectCash": 0,
+      "projectKind": 22000,
+      "detailCash": 141415,
+      "detailKind": 466300,
+      "countryName": "PALESTINE, STATE OF",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_018045",
+      "projectNumberNormalized": "PIMS-10239 GEF SGP 8th Operational Phase (Part 1)",
+      "projectCash": 12300,
+      "projectKind": 7300,
+      "detailCash": 141415,
+      "detailKind": 466300,
+      "countryName": "PALESTINE, STATE OF",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_018046",
+      "projectNumberNormalized": "PIMS-10239 GEF SGP 8th Operational Phase (Part 1)",
+      "projectCash": 71115,
+      "projectKind": 0,
+      "detailCash": 141415,
+      "detailKind": 466300,
+      "countryName": "PALESTINE, STATE OF",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_018047",
+      "projectNumberNormalized": "PIMS-10239 GEF SGP 8th Operational Phase (Part 1)",
+      "projectCash": 35000,
+      "projectKind": 15000,
+      "detailCash": 141415,
+      "detailKind": 466300,
+      "countryName": "PALESTINE, STATE OF",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_018048",
+      "projectNumberNormalized": "PIMS-10239 GEF SGP 8th Operational Phase (Part 1)",
+      "projectCash": 23000,
+      "projectKind": 27000,
+      "detailCash": 141415,
+      "detailKind": 466300,
+      "countryName": "PALESTINE, STATE OF",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_018049",
+      "projectNumberNormalized": "PIMS-10239 GEF SGP 8th Operational Phase (Part 1)",
+      "projectCash": 0,
+      "projectKind": 50000,
+      "detailCash": 141415,
+      "detailKind": 466300,
+      "countryName": "PALESTINE, STATE OF",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_021251",
+      "projectNumberNormalized": "TUR/SGP/OP5/Y2/STAR/CC/12/02",
+      "projectCash": 0,
+      "projectKind": 0,
+      "detailCash": 57685,
+      "detailKind": 34275,
+      "countryName": "TÜRKIYE",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_024648",
+      "projectNumberNormalized": "COS/SGP/OP4/CORE/07/14",
+      "projectCash": 54000,
+      "projectKind": 0,
+      "detailCash": 54000,
+      "detailKind": 7866.13,
+      "countryName": "COSTA RICA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_024649",
+      "projectNumberNormalized": "COS/SGP/OP4/CORE/07/14",
+      "projectCash": 0,
+      "projectKind": 7866.13,
+      "detailCash": 54000,
+      "detailKind": 7866.13,
+      "countryName": "COSTA RICA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_024671",
+      "projectNumberNormalized": "COS/SGP/OP4/Y2/CORE/08/07",
+      "projectCash": 0,
+      "projectKind": 13600,
+      "detailCash": 0,
+      "detailKind": 20958.2,
+      "countryName": "COSTA RICA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_024672",
+      "projectNumberNormalized": "COS/SGP/OP4/Y2/CORE/08/07",
+      "projectCash": 0,
+      "projectKind": 7358.2,
+      "detailCash": 0,
+      "detailKind": 20958.2,
+      "countryName": "COSTA RICA",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_026112",
+      "projectNumberNormalized": "ECU/05/006",
+      "projectCash": 0,
+      "projectKind": 0,
+      "detailCash": 12500,
+      "detailKind": 12500,
+      "countryName": "ECUADOR",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_027431",
+      "projectNumberNormalized": "HND/SGP/OP4/CORE/07/05",
+      "projectCash": 0,
+      "projectKind": 1618.2,
+      "detailCash": 12294.89,
+      "detailKind": 21633.97,
+      "countryName": "HONDURAS",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_027435",
+      "projectNumberNormalized": "HND/SGP/OP4/CORE/07/05",
+      "projectCash": 12294.89,
+      "projectKind": 20015.77,
+      "detailCash": 12294.89,
+      "detailKind": 21633.97,
+      "countryName": "HONDURAS",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_027441",
+      "projectNumberNormalized": "HND/SGP/OP4/CORE/08/03",
+      "projectCash": 0,
+      "projectKind": 20000,
+      "detailCash": 0,
+      "detailKind": 69868.42,
+      "countryName": "HONDURAS",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    },
+    {
+      "rowId": "p_027443",
+      "projectNumberNormalized": "HND/SGP/OP4/CORE/08/03",
+      "projectCash": 0,
+      "projectKind": 49868.42,
+      "detailCash": 0,
+      "detailKind": 69868.42,
+      "countryName": "HONDURAS",
+      "reason": "Duplicate PROJECTNUMBER; detail rows aggregate to the project number rather than an individual source row."
+    }
+  ],
+  "unmappedCountries": [
+    {
+      "countryName": "SLOVAK REPUBLIC",
+      "records": 76,
+      "grantAmount": 1973000.44,
+      "cofinancingTotal": 2665906.34
+    },
+    {
+      "countryName": "ESWATINI (KINGDOM OF)",
+      "records": 20,
+      "grantAmount": 646841.92,
+      "cofinancingTotal": 211967.05
+    }
+  ],
+  "cofinancingProjectNumbersMissingFromProjects": [],
+  "projectNumbersWithoutDetailedCofinancing": 1456,
+  "notes": [
+    "Project table is authoritative for project counts, grant totals, and project-level cofinancing totals.",
+    "Cofinancing detail table is authoritative for partner, cofinancer type, and cofinancer geography analytics.",
+    "Row-level mismatch cases compare each project source row to detailed rows aggregated by normalized PROJECTNUMBER."
+  ]
+}

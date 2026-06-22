@@ -1,0 +1,49 @@
+source_name,canonical_name,iso3_hint,notes
+Cabo Verde,Cabo Verde,CPV,Prefer current country name
+Cape Verde,Cabo Verde,CPV,Legacy/common name
+Cote d'Ivoire,Côte d'Ivoire,CIV,ASCII apostrophe variant
+Côte d’Ivoire,Côte d'Ivoire,CIV,Curly apostrophe variant
+Ivory Coast,Côte d'Ivoire,CIV,Common English alias
+Sao Tome and Principe,São Tomé and Príncipe,STP,ASCII variant
+São Tomé & Príncipe,São Tomé and Príncipe,STP,Ampersand variant
+Turkey,Türkiye,TUR,Common English name
+Türkiye,Türkiye,TUR,Current official short name
+Viet Nam,Viet Nam,VNM,UN style
+Vietnam,Viet Nam,VNM,Common English name
+Lao PDR,Lao People's Democratic Republic,LAO,Common UNDP shorthand
+Laos,Lao People's Democratic Republic,LAO,Common English name
+Moldova,Republic of Moldova,MDA,Common short name
+Republic of Moldova,Republic of Moldova,MDA,UN style
+Bolivia,Bolivia (Plurinational State of),BOL,Common short name
+Bolivia (Plurinational State of),Bolivia (Plurinational State of),BOL,UN style
+Tanzania,United Republic of Tanzania,TZA,Common short name
+United Republic of Tanzania,United Republic of Tanzania,TZA,UN style
+DR Congo,Democratic Republic of the Congo,COD,Common shorthand
+Democratic Republic of Congo,Democratic Republic of the Congo,COD,Common variant
+Democratic Republic of the Congo,Democratic Republic of the Congo,COD,Canonical
+Republic of Congo,Congo,COG,Common variant
+Congo,Congo,COG,Canonical short name
+Eswatini,Eswatini,SWZ,Current name
+Swaziland,Eswatini,SWZ,Legacy name
+North Macedonia,North Macedonia,MKD,Common current name
+The former Yugoslav Republic of Macedonia,North Macedonia,MKD,Legacy UN style
+Micronesia,Federated States of Micronesia,FSM,Common short name
+Federated States of Micronesia,Federated States of Micronesia,FSM,Canonical
+Palestine,State of Palestine,PSE,Common short name
+State of Palestine,State of Palestine,PSE,UN style
+Iran,Iran (Islamic Republic of),IRN,Common short name
+Iran (Islamic Republic of),Iran (Islamic Republic of),IRN,UN style
+Syria,Syrian Arab Republic,SYR,Common short name
+Syrian Arab Republic,Syrian Arab Republic,SYR,UN style
+Venezuela,Venezuela (Bolivarian Republic of),VEN,Common short name
+Venezuela (Bolivarian Republic of),Venezuela (Bolivarian Republic of),VEN,UN style
+Kyrgyzstan,Kyrgyzstan,KGZ,Common name
+Kyrgyz Republic,Kyrgyzstan,KGZ,Alternative official name
+Brunei,Brunei Darussalam,BRN,Common short name
+Brunei Darussalam,Brunei Darussalam,BRN,UN style
+Russia,Russian Federation,RUS,Common short name
+Russian Federation,Russian Federation,RUS,UN style
+South Korea,Republic of Korea,KOR,Common English name
+Republic of Korea,Republic of Korea,KOR,UN style
+North Korea,Democratic People's Republic of Korea,PRK,Common English name
+Democratic People's Republic of Korea,Democratic People's Republic of Korea,PRK,UN style
