@@ -311,18 +311,6 @@ button:disabled {
   color: var(--bad);
 }
 
-.footer {
-  max-width: 1220px;
-  margin: 0 auto;
-  padding: 24px;
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 13px;
-}
-
 @media (max-width: 920px) {
   .workspace {
     grid-template-columns: 1fr;
@@ -330,8 +318,7 @@ button:disabled {
 }
 
 @media (max-width: 640px) {
-  .nav,
-  .footer {
+  .nav {
     align-items: flex-start;
     flex-direction: column;
   }

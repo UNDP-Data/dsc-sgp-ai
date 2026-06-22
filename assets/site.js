@@ -141,13 +141,11 @@ async function streamAnswer(query, signal) {
   const decoder = new TextDecoder();
   let buffer = "";
   let answer = "";
-  let chunkCount = 0;
   const started = performance.now();
 
   function handleLine(line) {
     if (!line.trim()) return;
     const payload = JSON.parse(line);
-    chunkCount += 1;
     const text = extractText(payload.content);
     if (text) {
       answer += text;
@@ -156,7 +154,7 @@ async function streamAnswer(query, signal) {
     if (Array.isArray(payload.documents)) {
       renderSources(payload.documents);
     }
-    answerMeta.textContent = `${Math.round((performance.now() - started) / 100) / 10}s · ${chunkCount} chunks`;
+    answerMeta.textContent = `${Math.round((performance.now() - started) / 100) / 10}s`;
   }
 
   while (true) {
