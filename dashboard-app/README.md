@@ -57,15 +57,15 @@ The deployed artifact is `app/dist`. The workflow automatically sets the Vite ba
 - `https://<owner>.github.io/` repos use `/`
 - `https://<owner>.github.io/<repo>/` repos use `/<repo>/`
 
-To test a project-site build locally before pushing, replace `sgp-dashboard` with the intended GitHub repository name:
+To test a nested static dashboard build locally before pushing:
 
 ```bash
 cd app
-VITE_BASE_PATH=/sgp-dashboard/ npm run build:pages
+npm run build:pages
 npm run preview
 ```
 
-Open the preview URL shown by Vite and verify that the dashboard loads its data and map assets. All files in `app/public/` are copied into the static site, including the processed dashboard data in `app/public/data/`.
+`build:pages` uses relative asset paths so the generated files can be served from a nested route such as `/dashboard/` or `/<repo>/dashboard/` without JavaScript and CSS 404s. Open the preview URL shown by Vite and verify that the dashboard loads its data and map assets. All files in `app/public/` are copied into the static site, including the processed dashboard data in `app/public/data/`.
 
 ## Generated Outputs
 

@@ -38,9 +38,7 @@ jobs:
 
       - name: Build dashboard for /dashboard/
         working-directory: dashboard-app/app
-        run: npm run build
-        env:
-          VITE_BASE_PATH: /dashboard/
+        run: npm run build:pages
 
       - name: Stage static site
         run: |

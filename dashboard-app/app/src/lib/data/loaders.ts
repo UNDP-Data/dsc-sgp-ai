@@ -7,8 +7,13 @@ import {
 import { buildAggregates } from "../aggregation/aggregateData";
 
 function publicAssetPath(path: string) {
-  const base = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
-  return `${base}${path.replace(/^\/+/, "")}`;
+  const cleanPath = path.replace(/^\/+/, "");
+  const configuredBase = import.meta.env.BASE_URL || "/";
+  if (configuredBase === "./" || configuredBase === "") {
+    return new URL(`../${cleanPath}`, import.meta.url).toString();
+  }
+  const base = configuredBase.endsWith("/") ? configuredBase : `${configuredBase}/`;
+  return `${base}${cleanPath}`;
 }
 
 async function fetchJson<T>(path: string): Promise<T> {

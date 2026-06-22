@@ -103,7 +103,7 @@ dashboard/      # committed static build served by branch-based GitHub Pages at 
 dashboard-app/  # maintainable source copy of the original dashboard project
 ```
 
-The static `dashboard/` folder was built with `VITE_BASE_PATH=/dashboard/`, so it can be served directly at:
+The static `dashboard/` folder is built with relative asset paths, so it can be served directly at:
 
 ```text
 https://<owner>.github.io/<repo>/dashboard/
@@ -114,7 +114,7 @@ For ongoing maintenance, edit the source in `dashboard-app/`, then rebuild and c
 ```bash
 cd dashboard-app/app
 npm ci
-VITE_BASE_PATH=/dashboard/ npm run build:pages
+npm run build:pages
 rsync -a --delete dist/ ../../dashboard/
 ```
 

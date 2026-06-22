@@ -15,6 +15,7 @@ type MapViewTransform = { scale: number; tx: number; ty: number };
 type MapFocusRect = { x0: number; y0: number; x1: number; y1: number };
 type MapFeatureBounds = { minX: number; minY: number; maxX: number; maxY: number };
 type WorldFeature = GeoJSON.Feature<GeoJSON.Geometry, { iso3?: string; name?: string; [key: string]: unknown }>;
+type MapRenderableFeaturePart = { key: string; feature: WorldFeature; wrapShiftX: number };
 type SgpGeoPath = { bounds: (feature: WorldFeature) => [[number, number], [number, number]] };
 type SelectionKind = "global" | "region" | "country";
 type MapCountryClickTarget = {
@@ -51,6 +52,29 @@ const SGP_MAP_RESET_MS = 680;
 const SGP_MAP_COUNTRY_FIT_MS = 980;
 const SGP_MAP_REGION_FIT_MS = 900;
 const SGP_MAP_GLOBAL_FIT_MS = 760;
+const SGP_PACIFIC_WRAP_ISO3 = new Set([
+  "ASM",
+  "COK",
+  "FJI",
+  "FSM",
+  "GUM",
+  "KIR",
+  "MHL",
+  "NCL",
+  "NIU",
+  "NRU",
+  "PCN",
+  "PLW",
+  "PNG",
+  "PYF",
+  "SLB",
+  "TKL",
+  "TON",
+  "TUV",
+  "VUT",
+  "WLF",
+  "WSM"
+]);
 
 function clampNumber(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
@@ -117,7 +141,84 @@ function scaleMapAroundPoint(view: MapViewTransform, factor: number, anchorX: nu
   });
 }
 
-function collectMapFeatureBounds(features: WorldFeature[], path: SgpGeoPath): MapFeatureBounds | null {
+function polygonMeanLongitude(polygon: GeoJSON.Position[][]) {
+  let longitudeSum = 0;
+  let pointCount = 0;
+  for (const ring of polygon) {
+    for (const point of ring) {
+      const longitude = Number(point[0]);
+      if (!Number.isFinite(longitude)) continue;
+      longitudeSum += longitude;
+      pointCount += 1;
+    }
+  }
+  return pointCount ? longitudeSum / pointCount : 0;
+}
+
+function shouldShiftPacificPolygon(polygon: GeoJSON.Position[][]) {
+  return polygonMeanLongitude(polygon) < 0;
+}
+
+function partKeyForFeature(feature: WorldFeature, suffix: string) {
+  const iso3 = String(feature.properties?.iso3 ?? "");
+  const name = String(feature.properties?.name ?? "feature").replace(/\W+/g, "-").toLowerCase();
+  return `${iso3 || name}-${suffix}`;
+}
+
+export function mapFeatureToWrappedParts(feature: WorldFeature, pacificWrapShiftX: number): MapRenderableFeaturePart[] {
+  const iso3 = String(feature.properties?.iso3 ?? "");
+  const geometry = feature.geometry;
+  const basePart = { key: partKeyForFeature(feature, "base"), feature, wrapShiftX: 0 };
+
+  if (!geometry || !SGP_PACIFIC_WRAP_ISO3.has(iso3) || pacificWrapShiftX <= 0) {
+    return [basePart];
+  }
+
+  if (geometry.type === "Polygon") {
+    return [
+      {
+        key: partKeyForFeature(feature, "wrapped-polygon"),
+        feature,
+        wrapShiftX: shouldShiftPacificPolygon(geometry.coordinates) ? pacificWrapShiftX : 0
+      }
+    ];
+  }
+
+  if (geometry.type === "MultiPolygon") {
+    const normalPolygons: GeoJSON.Position[][][] = [];
+    const wrappedPolygons: GeoJSON.Position[][][] = [];
+
+    for (const polygon of geometry.coordinates) {
+      if (shouldShiftPacificPolygon(polygon)) {
+        wrappedPolygons.push(polygon);
+      } else {
+        normalPolygons.push(polygon);
+      }
+    }
+
+    const parts: MapRenderableFeaturePart[] = [];
+    if (normalPolygons.length) {
+      parts.push({
+        key: partKeyForFeature(feature, "normal"),
+        feature: { ...feature, geometry: { type: "MultiPolygon", coordinates: normalPolygons } },
+        wrapShiftX: 0
+      });
+    }
+    if (wrappedPolygons.length) {
+      parts.push({
+        key: partKeyForFeature(feature, "wrapped"),
+        feature: { ...feature, geometry: { type: "MultiPolygon", coordinates: wrappedPolygons } },
+        wrapShiftX: pacificWrapShiftX
+      });
+    }
+
+    return parts.length ? parts : [basePart];
+  }
+
+  return [basePart];
+}
+
+function collectMapFeatureBounds(features: WorldFeature[], path: SgpGeoPath, pacificWrapShiftX = 0): MapFeatureBounds | null {
   if (!features.length) return null;
   let minX = Number.POSITIVE_INFINITY;
   let minY = Number.POSITIVE_INFINITY;
@@ -125,14 +226,16 @@ function collectMapFeatureBounds(features: WorldFeature[], path: SgpGeoPath): Ma
   let maxY = Number.NEGATIVE_INFINITY;
 
   for (const feature of features) {
-    const [[x0, y0], [x1, y1]] = path.bounds(feature);
-    if (!Number.isFinite(x0) || !Number.isFinite(y0) || !Number.isFinite(x1) || !Number.isFinite(y1)) {
-      continue;
+    for (const part of mapFeatureToWrappedParts(feature, pacificWrapShiftX)) {
+      const [[x0, y0], [x1, y1]] = path.bounds(part.feature);
+      if (!Number.isFinite(x0) || !Number.isFinite(y0) || !Number.isFinite(x1) || !Number.isFinite(y1)) {
+        continue;
+      }
+      minX = Math.min(minX, x0 + part.wrapShiftX);
+      minY = Math.min(minY, y0);
+      maxX = Math.max(maxX, x1 + part.wrapShiftX);
+      maxY = Math.max(maxY, y1);
     }
-    minX = Math.min(minX, x0);
-    minY = Math.min(minY, y0);
-    maxX = Math.max(maxX, x1);
-    maxY = Math.max(maxY, y1);
   }
 
   if (!Number.isFinite(minX) || !Number.isFinite(minY) || !Number.isFinite(maxX) || !Number.isFinite(maxY)) {
@@ -145,9 +248,10 @@ function fitMapTransformForFeatures(
   features: WorldFeature[],
   path: SgpGeoPath,
   focusRect: MapFocusRect,
-  fitCoverage: number
+  fitCoverage: number,
+  pacificWrapShiftX = 0
 ): MapViewTransform {
-  const bounds = collectMapFeatureBounds(features, path);
+  const bounds = collectMapFeatureBounds(features, path, pacificWrapShiftX);
   if (!bounds) return SGP_MAP_IDENTITY;
   const targetRect = clampMapFocusRect(focusRect);
   const targetWidth = Math.max(1, targetRect.x1 - targetRect.x0);
@@ -399,6 +503,12 @@ function WorldChoroplethComponent({
     : `Country distribution and scale for ${metricLabels[metric]}`;
   const projection = useMemo(() => d3.geoNaturalEarth1().fitExtent([[12, 10], [width - 12, height - 10]], geo), [geo, width, height]);
   const pathGen = useMemo(() => d3.geoPath(projection), [projection]);
+  const pacificWrapShiftX = useMemo(() => {
+    const leftEdge = projection([-180, -15]);
+    const rightEdge = projection([180, -15]);
+    if (!leftEdge || !rightEdge) return 0;
+    return Math.max(0, rightEdge[0] - leftEdge[0]);
+  }, [projection]);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
   const tooltipFrameRef = useRef<number | null>(null);
   const nextTooltipRef = useRef<{ x: number; y: number; text: string } | null>(null);
@@ -540,13 +650,13 @@ function WorldChoroplethComponent({
     (features: WorldFeature[], selectionKind: SelectionKind) => {
       const focusRect = getFocusRect(selectionKind);
       const targetFeatures = features.length ? features : geo.features as WorldFeature[];
-      const fitted = fitMapTransformForFeatures(targetFeatures, pathGen as SgpGeoPath, focusRect, fitCoverageFor(selectionKind));
-      const bounds = collectMapFeatureBounds(targetFeatures, pathGen as SgpGeoPath);
+      const fitted = fitMapTransformForFeatures(targetFeatures, pathGen as SgpGeoPath, focusRect, fitCoverageFor(selectionKind), pacificWrapShiftX);
+      const bounds = collectMapFeatureBounds(targetFeatures, pathGen as SgpGeoPath, pacificWrapShiftX);
       const xBias = selectionKind === "region" ? 0.02 : selectionKind === "country" ? 0 : 0.01;
       const yBias = selectionKind === "region" ? 0.26 : selectionKind === "country" ? 0.08 : 0;
       return clampMapTransform(alignMapBoundsInFocusRect(fitted, bounds, focusRect, xBias, yBias));
     },
-    [fitCoverageFor, geo.features, getFocusRect, pathGen]
+    [fitCoverageFor, geo.features, getFocusRect, pacificWrapShiftX, pathGen]
   );
 
   const zoomBy = useCallback(
@@ -737,7 +847,7 @@ function WorldChoroplethComponent({
         >
           <path d={pathGen({ type: "Sphere" }) ?? undefined} fill="none" />
           <g ref={mapGroupRef} className="map-transform-group" transform={mapTransformString(SGP_MAP_IDENTITY)}>
-            {geo.features.map((feature) => {
+            {geo.features.flatMap((feature) => {
               const iso3 = String(feature.properties?.iso3 ?? "");
               const row = dataByIso.get(iso3);
               const selectableRow = selectableDataByIso.get(iso3);
@@ -748,11 +858,12 @@ function WorldChoroplethComponent({
               const hasActiveValue = value > 0;
               const isOutsideActiveFilter = !row && selectable;
               const countryFill = hasActiveValue ? colorForValue(Math.max(value, 1)) : "#F1EFE8";
-              return (
+              return mapFeatureToWrappedParts(feature as WorldFeature, pacificWrapShiftX).map((part) => (
                 <path
-                  key={iso3}
+                  key={part.key}
                   data-iso3={iso3}
-                  d={pathGen(feature) ?? undefined}
+                  d={pathGen(part.feature) ?? undefined}
+                  transform={part.wrapShiftX ? `translate(${part.wrapShiftX} 0)` : undefined}
                   className={[
                     "country",
                     selectable ? "selectable" : "",
@@ -789,7 +900,7 @@ function WorldChoroplethComponent({
                   tabIndex={selectable ? 0 : -1}
                   aria-label={selectable ? `Select ${displayRow?.label ?? iso3}` : undefined}
                 />
-              );
+              ));
             })}
           </g>
         </svg>
