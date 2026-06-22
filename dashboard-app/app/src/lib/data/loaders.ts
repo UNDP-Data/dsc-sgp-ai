@@ -10,7 +10,8 @@ function publicAssetPath(path: string) {
   const cleanPath = path.replace(/^\/+/, "");
   const configuredBase = import.meta.env.BASE_URL || "/";
   if (configuredBase === "./" || configuredBase === "") {
-    return new URL(`../${cleanPath}`, import.meta.url).toString();
+    const pageBase = typeof window !== "undefined" ? new URL("./", window.location.href) : new URL("./", "http://localhost/");
+    return new URL(cleanPath, pageBase).toString();
   }
   const base = configuredBase.endsWith("/") ? configuredBase : `${configuredBase}/`;
   return `${base}${cleanPath}`;
