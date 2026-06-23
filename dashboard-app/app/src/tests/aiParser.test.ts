@@ -6,7 +6,7 @@ import { sgpRegionOptions } from "../lib/dashboard/config";
 import { COUNTRY_GROUP_OPTIONS } from "../lib/data/countryGroups";
 import type { Aggregates } from "../lib/data/schema";
 
-const aggregates = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "public", "data", "aggregates.json"), "utf8")) as Aggregates;
+const aggregates = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "..", "data", "processed", "aggregates.json"), "utf8")) as Aggregates;
 const allowed = {
   countries: aggregates.byCountry.map((row) => ({ iso3: row.key, name: row.label })),
   regions: [...aggregates.byRegion.map((row) => row.key), ...COUNTRY_GROUP_OPTIONS.map((option) => option.key)],

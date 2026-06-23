@@ -7,9 +7,9 @@ import type { CofinancingRecord, ProjectRecord } from "../lib/data/schema";
 import { applyFilters } from "../lib/filters/applyFilters";
 import { DEFAULT_FILTERS } from "../lib/filters/filterTypes";
 
-const dataDir = path.resolve(process.cwd(), "public", "data");
-const projects = JSON.parse(fs.readFileSync(path.join(dataDir, "projects.normalized.json"), "utf8")) as ProjectRecord[];
-const cofinancing = JSON.parse(fs.readFileSync(path.join(dataDir, "cofinancing.normalized.json"), "utf8")) as CofinancingRecord[];
+const processedDataDir = path.resolve(process.cwd(), "..", "data", "processed");
+const projects = JSON.parse(fs.readFileSync(path.join(processedDataDir, "projects.normalized.json"), "utf8")) as ProjectRecord[];
+const cofinancing = JSON.parse(fs.readFileSync(path.join(processedDataDir, "cofinancing.normalized.json"), "utf8")) as CofinancingRecord[];
 
 describe("dashboard filtering", () => {
   it("combines country, focal area, year, and grant filters", () => {

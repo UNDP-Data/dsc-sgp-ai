@@ -8,10 +8,11 @@
     "build": "tsc -b && vite build",
     "build:pages": "tsc -b && vite build --base=./",
     "preview": "vite preview --host 127.0.0.1",
-    "ingest": "NODE_PATH=./node_modules tsx ../scripts/ingest/ingest.ts",
+    "ingest": "NODE_PATH=./node_modules tsx ../scripts/ingest/ingest.ts && NODE_PATH=./node_modules tsx ../scripts/ingest/build-runtime-data.ts",
     "validate:data": "NODE_PATH=./node_modules tsx ../scripts/validate/validate-data.ts",
     "build:aggregates": "NODE_PATH=./node_modules tsx ../scripts/ingest/build-aggregates.ts",
     "build:search": "NODE_PATH=./node_modules tsx ../scripts/ingest/build-search-index.ts",
+    "build:runtime": "NODE_PATH=./node_modules tsx ../scripts/ingest/build-runtime-data.ts",
     "test": "vitest run --exclude src/tests/e2e/**",
     "test:smoke": "playwright test"
   },

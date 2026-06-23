@@ -49,7 +49,8 @@ The workflow runs:
 cd app
 npm ci
 npm test
-npm run build
+npm run build:runtime
+npm run build:pages
 ```
 
 The deployed artifact is `app/dist`. The workflow automatically sets the Vite base path:
@@ -65,11 +66,11 @@ npm run build:pages
 npm run preview
 ```
 
-`build:pages` uses relative asset paths so the generated files can be served from a nested route such as `/dashboard/` or `/<repo>/dashboard/` without JavaScript and CSS 404s. Open the preview URL shown by Vite and verify that the dashboard loads its data and map assets. All files in `app/public/` are copied into the static site, including the processed dashboard data in `app/public/data/`.
+`build:pages` uses relative asset paths so the generated files can be served from a nested route such as `/dashboard/` or `/<repo>/dashboard/` without JavaScript and CSS 404s. Open the preview URL shown by Vite and verify that the dashboard loads its data and map assets. `build:runtime` creates compact runtime JSON files in `app/public/data/` and prunes large normalized/search artifacts from the deploy payload; the full processed files remain in `data/processed/` and `outputs/data/`.
 
 ## Generated Outputs
 
-`npm run ingest` writes the same dashboard-ready data to:
+`npm run ingest` writes dashboard-ready data to:
 
 - `data/processed/`
 - `outputs/data/`
@@ -84,6 +85,13 @@ Key files:
 - `search-index.json`
 - `country-aliases.json`
 - `data-dictionary.json`
+
+For deployment, the app reads compact table files:
+
+- `projects.runtime.json`
+- `cofinancing.runtime.json`
+
+These are generated from the normalized files by `npm run build:runtime` and mirrored to `app/public/data/`.
 
 ## Validation Basis
 
@@ -107,7 +115,7 @@ Key files:
 - Project detail drawer with cofinancing partner rows
 - Country profile drawer
 - Local natural-language query planner
-- Shareable URL filter state, undo/redo, presets, and export menu
+- Shareable URL filter state and export menu
 - CSV, JSON, ZIP, PNG, PDF, Markdown briefing, and filter recipe exports
 
 ## Notes

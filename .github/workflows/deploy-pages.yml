@@ -36,6 +36,10 @@ jobs:
         working-directory: dashboard-app/app
         run: npm test
 
+      - name: Build dashboard runtime data
+        working-directory: dashboard-app/app
+        run: npm run build:runtime
+
       - name: Build dashboard for /dashboard/
         working-directory: dashboard-app/app
         run: npm run build:pages

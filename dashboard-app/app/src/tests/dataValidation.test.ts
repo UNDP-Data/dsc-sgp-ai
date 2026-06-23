@@ -4,10 +4,9 @@ import { describe, expect, it } from "vitest";
 import { computeProjectMetrics, round2 } from "../lib/aggregation/metrics";
 import type { CofinancingRecord, ProjectRecord, ValidationReport } from "../lib/data/schema";
 
-const dataDir = path.resolve(process.cwd(), "public", "data");
 const processedDataDir = path.resolve(process.cwd(), "..", "data", "processed");
-const projects = JSON.parse(fs.readFileSync(path.join(dataDir, "projects.normalized.json"), "utf8")) as ProjectRecord[];
-const cofinancing = JSON.parse(fs.readFileSync(path.join(dataDir, "cofinancing.normalized.json"), "utf8")) as CofinancingRecord[];
+const projects = JSON.parse(fs.readFileSync(path.join(processedDataDir, "projects.normalized.json"), "utf8")) as ProjectRecord[];
+const cofinancing = JSON.parse(fs.readFileSync(path.join(processedDataDir, "cofinancing.normalized.json"), "utf8")) as CofinancingRecord[];
 const report = JSON.parse(fs.readFileSync(path.join(processedDataDir, "validation-report.json"), "utf8")) as ValidationReport;
 
 describe("ingested SGP data", () => {
