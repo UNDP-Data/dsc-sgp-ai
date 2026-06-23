@@ -938,7 +938,7 @@ function SgpFilterConsole({
     <section className="atlas-filter-console" aria-label="Portfolio filters">
       <article className="atlas-filter-console__intro">
         <p className="atlas-figure-intro__kicker">UNDP GEF Small Grants Programme</p>
-        <h1>Portfolio intelligence atlas</h1>
+        <h1>SGP Grant Portfolio</h1>
         <p>Explore SGP projects through region, thematic, financial, partner, and record-level lenses.</p>
       </article>
       {assistantControls && <div className="atlas-filter-console__assistant">{assistantControls}</div>}
@@ -1784,7 +1784,7 @@ function CountryProfileDrawer({
 
 function BriefingNote({ metrics, countryRows, focalRows }: { metrics: PortfolioMetrics; countryRows: AggregateRow[]; focalRows: AggregateRow[] }) {
   const themeRows = visibleFocalRows(focalRows);
-  return `# SGP portfolio snapshot
+  return `# SGP Grant Portfolio snapshot
 
 ## Key figures
 - ${formatNumber(metrics.projectRecords ?? 0)} project records across ${formatNumber(metrics.countries ?? 0)} countries.
@@ -1808,7 +1808,7 @@ function LoadingDashboard() {
     <div className="boot-state">
       <section className="loading-panel" aria-label="Loading dashboard">
         <Globe2 size={30} />
-        <h1>Loading SGP portfolio data</h1>
+        <h1>Loading SGP Grant Portfolio</h1>
         <p>Reading normalized projects, cofinancing details, aggregates, and local world geometry.</p>
         <div className="loading-bar" aria-hidden="true"><i /></div>
         <div className="loading-map-skeleton" aria-hidden="true" />
@@ -1974,7 +1974,7 @@ function AppContent({ bundle, geo }: { bundle: DataBundle; geo: WorldGeo }) {
     } else if (kind === "pdf") {
       const { jsPDF } = await import("jspdf");
       const pdf = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
-      pdf.text("SGP portfolio dashboard", 42, 44);
+      pdf.text("SGP Grant Portfolio", 42, 44);
       pdf.text(`Project records: ${formatNumber(metrics.projectRecords ?? 0)}`, 42, 72);
       pdf.text(`Grant amount: ${formatMoney(metrics.grantAmount ?? 0)}`, 42, 94);
       pdf.text(`Cofinancing: ${formatMoney(metrics.cofinancingTotal ?? 0)}`, 42, 116);
