@@ -50,6 +50,7 @@ jobs:
           cp index.html _site/index.html
           cp .nojekyll _site/.nojekyll
           cp -R assets _site/assets
+          cp -R ai _site/ai
           cp -R dashboard-app/app/dist _site/dashboard
           cp -R archive-browser _site/archive-browser
 
