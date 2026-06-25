@@ -51,6 +51,7 @@ jobs:
           cp .nojekyll _site/.nojekyll
           cp -R assets _site/assets
           cp -R dashboard-app/app/dist _site/dashboard
+          cp -R archive-browser _site/archive-browser
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

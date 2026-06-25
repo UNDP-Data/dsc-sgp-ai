@@ -94,6 +94,23 @@ GET  /assistants/sgp_ai/sources
 GET  /assistants/sgp_ai/debug/retrieve
 ```
 
+
+## Archive browser route
+
+The SGP website archive browser is staged as a static GitHub Pages route:
+
+```text
+archive-browser/   # generated static browser for output/sgp_full_site/archive_browser
+```
+
+It is served at:
+
+```text
+https://<owner>.github.io/<repo>/archive-browser/
+```
+
+The route intentionally does not commit the scraper's `downloads/` folder. Image and video previews prefer canonical source URLs, with local downloaded paths retained only as fallback metadata in the archive browser payload. To refresh this route after a new scraper run, regenerate `output/sgp_full_site/archive_browser/` from the scraper repo and replace this folder.
+
 ## Dashboard route
 
 The SGP portfolio dashboard has been migrated into this repository in two isolated locations:
