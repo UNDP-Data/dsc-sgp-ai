@@ -2071,7 +2071,13 @@ function AppContent({ bundle, geo }: { bundle: DataBundle; geo: WorldGeo }) {
     }
     const focalArea = filters.focalAreas.length === 1 ? filters.focalAreas[0] : null;
     if (focalArea && hasVisibleFocalArea(focalArea)) {
-      return bundle.profiles.areas[focalArea] ?? null;
+      return (
+        bundle.profiles.areas[focalArea] ??
+        Object.values(bundle.profiles.areas).find((profile) =>
+          [profile.key, profile.title, ...(profile.aliases ?? [])].some((alias) => alias.toLowerCase() === focalArea.toLowerCase())
+        ) ??
+        null
+      );
     }
     return null;
   }, [bundle.profiles.areas, bundle.profiles.countries, filters.countries, filters.focalAreas]);

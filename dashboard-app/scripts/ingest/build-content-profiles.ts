@@ -222,13 +222,6 @@ function buildAreaProfiles(records: Array<Record<string, unknown>>) {
     };
   }
 
-  for (const [canonical, aliases] of Object.entries(AREA_ALIASES)) {
-    const existing = areas[canonical];
-    if (!existing) continue;
-    for (const alias of aliases) {
-      areas[alias] = existing;
-    }
-  }
   return areas;
 }
 
