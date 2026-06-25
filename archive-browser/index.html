@@ -312,7 +312,7 @@
       const q = query.trim().toLowerCase();
       if (!q) {
         resultCountEl.textContent = '';
-        renderTree(tree.sections || [], treeEl);
+        renderTree(initialTreeNodes(), treeEl);
         return;
       }
       const matches = searchableNodes.filter(leaf => leafSearchText(leaf).includes(q));
@@ -324,6 +324,11 @@
         note.textContent = `Showing first 800 matches. Narrow the search to see more.`;
         treeEl.appendChild(note);
       }
+    }
+    function initialTreeNodes() {
+      const sections = tree.sections || [];
+      if (sections.length === 1 && Array.isArray(sections[0].children)) return sections[0].children;
+      return sections;
     }
     function compact(value, maxItems = 80, maxText = 1800) {
       if (Array.isArray(value)) return value.slice(0, maxItems).map(item => compact(item, maxItems, maxText));

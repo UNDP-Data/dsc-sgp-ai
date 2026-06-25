@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="SGP AI query interface for the GEF Small Grants Programme Innovation Library.">
+  <title>SGP AI Query</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="site-header sgp-suite-nav" aria-label="SGP platform navigation">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="../" aria-label="SGP platform home">
+        <span class="brand-mark" aria-hidden="true">SGP</span>
+        <span>SGP AI</span>
+      </a>
+      <div class="suite-links" aria-label="Pages">
+        <a class="nav-link" aria-current="page" href="./">AI</a>
+        <a class="nav-link" href="../dashboard/">Dashboard</a>
+        <a class="nav-link" href="../archive-browser/">Archive</a>
+      </div>
+      <div id="status-pill" class="status-pill" aria-live="polite">
+        <span id="status-dot" class="dot loading"></span>
+        <span id="status-label">Checking backend...</span>
+      </div>
+    </nav>
+  </header>
+
+  <main class="app-shell">
+    <section class="query-panel" aria-labelledby="query-title">
+      <div class="query-heading">
+        <p class="eyebrow">GEF Small Grants Programme</p>
+        <h1 id="query-title">Ask the SGP Innovation Library</h1>
+        <p>
+          Answers are generated from SGP publication excerpts covering SGP-supported grants,
+          annual monitoring reports, and country programme materials.
+        </p>
+      </div>
+
+      <form id="query-form" class="query-form">
+        <label for="query">Question</label>
+        <textarea id="query" required minlength="2">How have SGP-supported grants helped communities address coastal erosion?</textarea>
+        <div class="form-actions">
+          <button id="submit" type="submit" disabled>Ask SGP AI</button>
+          <button id="stop" type="button" hidden>Stop</button>
+        </div>
+      </form>
+
+      <div class="examples" aria-label="Example questions">
+        <button type="button">What has SGP supported through community-based adaptation grants?</button>
+        <button type="button">What priority groups appear in recent SGP annual monitoring?</button>
+        <button type="button">What lessons have SGP-supported grants generated on plastic waste?</button>
+      </div>
+    </section>
+
+    <section class="workspace" aria-label="Answer workspace">
+      <article class="answer-panel">
+        <div class="panel-title-row">
+          <h2>Answer</h2>
+          <span id="answer-meta" class="muted"></span>
+        </div>
+        <div id="answer" class="answer" aria-live="polite">
+          <p class="empty">Ask a question to stream an answer.</p>
+        </div>
+      </article>
+
+      <aside class="sources-panel" aria-label="Sources">
+        <div class="panel-title-row">
+          <h2>Sources</h2>
+          <span id="source-count" class="muted">0 documents</span>
+        </div>
+        <div id="sources" class="sources">
+          <p class="empty">References will appear when the answer stream returns documents.</p>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="../assets/site.js"></script>
+</body>
+</html>
