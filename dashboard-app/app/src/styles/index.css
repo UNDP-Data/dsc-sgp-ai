@@ -2269,7 +2269,7 @@ body,
 
 .sgp-view-tabs {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 0.3rem;
   pointer-events: auto;
 }
@@ -3149,7 +3149,7 @@ body,
 
 .atlas-context-card--workspace .sgp-view-tabs {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 0.22rem;
   pointer-events: auto;
 }
@@ -3244,6 +3244,226 @@ body,
   white-space: nowrap;
   color: rgba(246, 236, 216, 0.96);
   font-size: 0.72rem;
+}
+
+.sgp-content-profile {
+  display: grid;
+  gap: 0.58rem;
+  min-width: 0;
+  color: rgba(246, 236, 216, 0.88);
+}
+
+.sgp-content-profile__hero {
+  display: grid;
+  gap: 0.34rem;
+  padding: 0.62rem;
+  border: 1px solid rgba(228, 213, 189, 0.18);
+  border-radius: 12px;
+  background:
+    linear-gradient(160deg, rgba(7, 28, 24, 0.58), rgba(23, 65, 57, 0.34)),
+    radial-gradient(circle at 12% 0%, rgba(255, 224, 108, 0.12), transparent 42%);
+}
+
+.sgp-content-profile__hero h2,
+.sgp-content-profile--empty h2 {
+  margin: 0;
+  color: rgba(255, 249, 234, 0.98);
+  font-size: 1rem;
+  line-height: 1.12;
+}
+
+.sgp-content-profile__hero p,
+.sgp-content-profile--empty p,
+.sgp-profile-empty {
+  margin: 0;
+  color: rgba(246, 236, 216, 0.72);
+  font-size: 0.68rem;
+  line-height: 1.42;
+}
+
+.sgp-profile-source,
+.sgp-profile-featured {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid rgba(255, 224, 108, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 224, 108, 0.1);
+  color: rgba(255, 249, 234, 0.94);
+  padding: 0.32rem 0.55rem;
+  font-size: 0.62rem;
+  font-weight: 820;
+  text-decoration: none;
+}
+
+.sgp-profile-source:hover,
+.sgp-profile-source:focus-visible,
+.sgp-profile-featured:hover,
+.sgp-profile-featured:focus-visible,
+.sgp-profile-link:hover,
+.sgp-profile-link:focus-visible,
+.sgp-profile-collections a:hover,
+.sgp-profile-collections a:focus-visible {
+  border-color: rgba(255, 224, 108, 0.55);
+  background: rgba(255, 224, 108, 0.16);
+  transform: translateY(-1px);
+}
+
+.sgp-profile-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.34rem;
+}
+
+.sgp-profile-metric-grid span,
+.sgp-profile-contact-list span {
+  min-width: 0;
+  display: grid;
+  gap: 0.12rem;
+  border: 1px solid rgba(228, 213, 189, 0.18);
+  border-radius: 9px;
+  background: rgba(10, 34, 30, 0.48);
+  padding: 0.42rem 0.48rem;
+}
+
+.sgp-profile-metric-grid em,
+.sgp-profile-contact-list em {
+  color: rgba(246, 236, 216, 0.62);
+  font-size: 0.56rem;
+  font-style: normal;
+  line-height: 1.12;
+}
+
+.sgp-profile-metric-grid strong,
+.sgp-profile-contact-list strong {
+  min-width: 0;
+  color: rgba(255, 249, 234, 0.95);
+  font-size: 0.72rem;
+  line-height: 1.16;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sgp-profile-collections {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.32rem;
+}
+
+.sgp-profile-collections a {
+  min-width: 0;
+  display: grid;
+  gap: 0.08rem;
+  border: 1px solid rgba(228, 213, 189, 0.18);
+  border-radius: 9px;
+  background: rgba(18, 56, 51, 0.38);
+  color: rgba(246, 236, 216, 0.76);
+  padding: 0.4rem;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+
+.sgp-profile-collections span {
+  font-size: 0.56rem;
+  font-weight: 760;
+}
+
+.sgp-profile-collections strong {
+  color: rgba(255, 249, 234, 0.96);
+  font-size: 0.84rem;
+}
+
+.sgp-profile-featured {
+  width: 100%;
+  justify-content: start;
+  display: grid;
+  gap: 0.1rem;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.sgp-profile-featured span {
+  color: rgba(246, 236, 216, 0.64);
+  font-size: 0.56rem;
+}
+
+.sgp-profile-featured strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sgp-profile-section {
+  display: grid;
+  gap: 0.34rem;
+}
+
+.sgp-profile-section__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.sgp-profile-section__head h3 {
+  margin: 0;
+  color: rgba(255, 249, 234, 0.94);
+  font-size: 0.7rem;
+}
+
+.sgp-profile-section__head span {
+  color: rgba(246, 236, 216, 0.56);
+  font-size: 0.58rem;
+}
+
+.sgp-profile-links,
+.sgp-profile-contact-list {
+  display: grid;
+  gap: 0.28rem;
+}
+
+.sgp-profile-link {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.44rem;
+  align-items: center;
+  min-height: 2.38rem;
+  border: 1px solid rgba(228, 213, 189, 0.16);
+  border-radius: 9px;
+  background: rgba(8, 28, 25, 0.44);
+  color: rgba(246, 236, 216, 0.86);
+  padding: 0.34rem;
+  text-decoration: none;
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease);
+}
+
+.sgp-profile-link img {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 7px;
+  object-fit: cover;
+  background: rgba(255, 249, 234, 0.1);
+}
+
+.sgp-profile-link span {
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: 0.64rem;
+  line-height: 1.2;
 }
 
 .theme-donut-panel {
@@ -3982,7 +4202,7 @@ body,
 
   .atlas-context-card--workspace .sgp-view-tabs {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     overflow: visible;
   }
 }

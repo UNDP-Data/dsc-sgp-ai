@@ -1,6 +1,7 @@
 import {
   type CofinancingByProject,
   type CofinancingRecord,
+  type ContentProfiles,
   type DataBundle,
   type ProjectRecord
 } from "./schema";
@@ -45,10 +46,25 @@ async function fetchRuntimeTable<T extends Record<string, unknown>>(path: string
   return inflateRuntimeTable(table);
 }
 
+async function fetchOptionalJson<T>(path: string, fallback: T): Promise<T> {
+  try {
+    return await fetchJson<T>(path);
+  } catch (error) {
+    console.warn(error);
+    return fallback;
+  }
+}
+
+const EMPTY_PROFILES: ContentProfiles = {
+  countries: {},
+  areas: {}
+};
+
 export async function loadDataBundle(): Promise<DataBundle> {
-  const [projects, cofinancing] = await Promise.all([
+  const [projects, cofinancing, profiles] = await Promise.all([
     fetchRuntimeTable<ProjectRecord>(publicAssetPath("data/projects.runtime.json")),
-    fetchRuntimeTable<CofinancingRecord>(publicAssetPath("data/cofinancing.runtime.json"))
+    fetchRuntimeTable<CofinancingRecord>(publicAssetPath("data/cofinancing.runtime.json")),
+    fetchOptionalJson<ContentProfiles>(publicAssetPath("data/content-profiles.json"), EMPTY_PROFILES)
   ]);
   const aggregates = buildAggregates(projects, cofinancing, { includeCrosstabs: false });
 
@@ -56,7 +72,8 @@ export async function loadDataBundle(): Promise<DataBundle> {
     projects,
     cofinancing,
     cofinancingByProject: {} as CofinancingByProject,
-    aggregates
+    aggregates,
+    profiles
   };
 }
 

@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { colorSchemes, defaultColorSchemeId, type ColorSchemeId } from "../viz/colorSchemes";
 import { DEFAULT_FILTERS, type DashboardFilters } from "./filterTypes";
 
-type DashboardView = "trends" | "themes" | "finance" | "networks" | "table";
+type DashboardView = "profile" | "trends" | "themes" | "finance" | "networks" | "table";
 type ThemeMode = ColorSchemeId;
 const COLOR_SCHEME_STORAGE_KEY = "sgp.color-scheme";
 
@@ -40,7 +40,7 @@ export const useDashboardStore = create<StoreState>((set) => ({
   filters: cloneFilters(DEFAULT_FILTERS),
   history: [],
   future: [],
-  activeView: "trends",
+  activeView: "profile",
   theme: initialTheme(),
   selectedProjectRowId: null,
   selectedCountryIso3: null,

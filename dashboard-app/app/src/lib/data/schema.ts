@@ -181,9 +181,61 @@ export type CofinancingByProjectEntry = {
 
 export type CofinancingByProject = Record<string, CofinancingByProjectEntry>;
 
+export type ContentProfileLink = {
+  title: string;
+  url: string;
+  kind?: string | null;
+  summary?: string | null;
+  imageUrl?: string | null;
+};
+
+export type ContentProfileMetric = {
+  label: string;
+  value: string;
+};
+
+export type ContentProfileCollection = {
+  key: string;
+  label: string;
+  count: number;
+  url?: string | null;
+};
+
+export type ContentProfileContact = {
+  name?: string | null;
+  role?: string | null;
+  email?: string | null;
+  phone?: string | null;
+};
+
+export type ContentProfile = {
+  type: "country" | "area";
+  key: string;
+  aliases?: string[];
+  title: string;
+  sourceUrl?: string | null;
+  summary?: string | null;
+  metrics: ContentProfileMetric[];
+  collections: ContentProfileCollection[];
+  contacts?: ContentProfileContact[];
+  publications: ContentProfileLink[];
+  stories: ContentProfileLink[];
+  caseStudies: ContentProfileLink[];
+  voices: ContentProfileLink[];
+  featured?: ContentProfileLink | null;
+};
+
+export type ContentProfiles = {
+  generatedAt?: string;
+  source?: string;
+  countries: Record<string, ContentProfile>;
+  areas: Record<string, ContentProfile>;
+};
+
 export type DataBundle = {
   projects: ProjectRecord[];
   cofinancing: CofinancingRecord[];
   cofinancingByProject: CofinancingByProject;
   aggregates: Aggregates;
+  profiles: ContentProfiles;
 };

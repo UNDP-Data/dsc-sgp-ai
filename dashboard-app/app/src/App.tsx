@@ -28,6 +28,7 @@ import { loadDataBundle, loadWorldGeo } from "./lib/data/loaders";
 import type {
   AggregateRow,
   CofinancingRecord,
+  ContentProfile,
   DataBundle,
   MetricKey,
   PortfolioMetrics,
@@ -987,10 +988,138 @@ function SgpViewTabs({ active, onChange }: { active: DashboardView; onChange: (v
   );
 }
 
+function ProfileLinkList({ title, links, emptyLabel }: { title: string; links: ContentProfile["stories"]; emptyLabel: string }) {
+  return (
+    <section className="sgp-profile-section">
+      <div className="sgp-profile-section__head">
+        <h3>{title}</h3>
+        <span>{formatNumber(links.length)}</span>
+      </div>
+      <div className="sgp-profile-links">
+        {links.slice(0, 6).map((link) => (
+          <a
+            key={`${link.title}-${link.url}`}
+            href={link.url || undefined}
+            target="_blank"
+            rel="noreferrer"
+            className="sgp-profile-link"
+            data-tooltip={`${link.title}${link.kind ? ` · ${link.kind}` : ""}${link.summary ? `. ${link.summary}` : ""}`}
+          >
+            {link.imageUrl && <img src={link.imageUrl} alt="" loading="lazy" />}
+            <span>{link.title}</span>
+          </a>
+        ))}
+        {!links.length && <p className="sgp-profile-empty">{emptyLabel}</p>}
+      </div>
+    </section>
+  );
+}
+
+function SgpContentProfilePanel({
+  profile,
+  fallbackTitle,
+  metrics
+}: {
+  profile: ContentProfile | null;
+  fallbackTitle: string;
+  metrics: PortfolioMetrics;
+}) {
+  if (!profile) {
+    return (
+      <section className="sgp-content-profile sgp-content-profile--empty" data-tooltip="Select one country or one thematic area to show the corresponding SGP website profile when scraper content is available.">
+        <span className="eyebrow">Profile</span>
+        <h2>{fallbackTitle}</h2>
+        <p>Select a country on the map or choose a single thematic area to see the matching SGP website profile, publications, stories, voices, and snapshot metrics.</p>
+        <div className="sgp-profile-metric-grid">
+          <span><em>Grants</em><strong>{formatNumber(metrics.projectRecords ?? 0)}</strong></span>
+          <span><em>Countries</em><strong>{formatNumber(metrics.countries ?? 0)}</strong></span>
+          <span><em>Grant funding</em><strong>{formatMoney(metrics.grantAmount ?? 0)}</strong></span>
+          <span><em>Cofinancing</em><strong>{formatMoney(metrics.cofinancingTotal ?? 0)}</strong></span>
+        </div>
+      </section>
+    );
+  }
+
+  const sourceLabel = profile.type === "country" ? "Country programme" : "Area of work";
+  const collections = profile.collections.filter((item) => item.count > 0 || item.url);
+  const hasContacts = Boolean(profile.contacts?.some((contact) => contact.name || contact.email || contact.phone));
+  return (
+    <section className="sgp-content-profile" data-tooltip={`${sourceLabel} profile from the SGP scraper archive content, joined to the selected dashboard scope.`}>
+      <div className="sgp-content-profile__hero">
+        <span className="eyebrow">{sourceLabel}</span>
+        <h2>{profile.title}</h2>
+        {profile.summary && <p>{profile.summary}</p>}
+        {profile.sourceUrl && (
+          <a className="sgp-profile-source" href={profile.sourceUrl} target="_blank" rel="noreferrer" data-tooltip="Source SGP website page captured by the scraper archive.">
+            Open SGP source
+          </a>
+        )}
+      </div>
+
+      {!!profile.metrics.length && (
+        <section className="sgp-profile-metric-grid" aria-label="Scraped profile metrics">
+          {profile.metrics.slice(0, 8).map((metric) => (
+            <span key={`${metric.label}-${metric.value}`} data-tooltip={`${metric.label}: ${metric.value} from the SGP website profile snapshot.`}>
+              <em>{metric.label}</em>
+              <strong>{metric.value}</strong>
+            </span>
+          ))}
+        </section>
+      )}
+
+      {!!collections.length && (
+        <section className="sgp-profile-collections" aria-label="Profile content collections">
+          {collections.map((collection) => (
+            <a
+              key={collection.key}
+              href={collection.url || undefined}
+              target="_blank"
+              rel="noreferrer"
+              data-tooltip={`${collection.label}: ${formatNumber(collection.count)} items observed in the scraper output.`}
+            >
+              <span>{collection.label}</span>
+              <strong>{formatNumber(collection.count)}</strong>
+            </a>
+          ))}
+        </section>
+      )}
+
+      {profile.featured && (
+        <a className="sgp-profile-featured" href={profile.featured.url || undefined} target="_blank" rel="noreferrer" data-tooltip={profile.featured.summary || profile.featured.title}>
+          <span>Featured</span>
+          <strong>{profile.featured.title}</strong>
+        </a>
+      )}
+
+      {hasContacts && (
+        <section className="sgp-profile-section">
+          <div className="sgp-profile-section__head">
+            <h3>Contacts</h3>
+            <span>{formatNumber(profile.contacts?.length ?? 0)}</span>
+          </div>
+          <div className="sgp-profile-contact-list">
+            {profile.contacts?.map((contact, index) => (
+              <span key={`${contact.name ?? "contact"}-${index}`} data-tooltip={[contact.role, contact.email, contact.phone].filter(Boolean).join(" · ")}>
+                <strong>{contact.name || contact.role || "Programme contact"}</strong>
+                <em>{contact.email || contact.phone || contact.role}</em>
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <ProfileLinkList title="Stories" links={profile.stories} emptyLabel="No story cards were present for this profile in the scraper output." />
+      <ProfileLinkList title={profile.type === "area" ? "Case studies" : "Publications"} links={profile.type === "area" ? profile.caseStudies : profile.publications} emptyLabel="No publication or case-study links were present in the scraper output." />
+      <ProfileLinkList title="Voices" links={profile.voices} emptyLabel="No voice/video items were present for this profile in the scraper output." />
+    </section>
+  );
+}
+
 function SgpAtlasContextCard({
   row,
   metrics,
   mode,
+  profile,
   activeView,
   onViewChange,
   filteredProjects,
@@ -1007,6 +1136,7 @@ function SgpAtlasContextCard({
   row: AggregateRow | null;
   metrics: PortfolioMetrics;
   mode: string;
+  profile: ContentProfile | null;
   activeView: DashboardView;
   onViewChange: (view: DashboardView) => void;
   filteredProjects: ProjectRecord[];
@@ -1047,6 +1177,10 @@ function SgpAtlasContextCard({
       <SgpViewTabs active={activeView} onChange={onViewChange} />
 
       <div className={`sgp-context-tab-body sgp-context-tab-body--${activeView}`} aria-label={`${viewMeta.label} panel`} data-tooltip={`${viewMeta.label} view: ${viewMeta.caption}`}>
+        {activeView === "profile" && (
+          <SgpContentProfilePanel profile={profile} fallbackTitle={row?.label ?? "Global portfolio"} metrics={metrics} />
+        )}
+
         {activeView === "trends" && (
           <div className="sgp-context-chart-stack">
             <TimeSeriesChart
@@ -1930,6 +2064,17 @@ function AppContent({ bundle, geo }: { bundle: DataBundle; geo: WorldGeo }) {
     );
   }, [aggregates.byCountry, filters.countries, hoveredCountryIso3]);
   const atlasContextMode = hoveredCountryIso3 ? "Hover preview" : filters.countries.length ? "Selected country" : "Portfolio";
+  const selectedProfile = useMemo(() => {
+    const countryKey = filters.countries.length === 1 ? filters.countries[0] : null;
+    if (countryKey) {
+      return bundle.profiles.countries[countryKey] ?? null;
+    }
+    const focalArea = filters.focalAreas.length === 1 ? filters.focalAreas[0] : null;
+    if (focalArea && hasVisibleFocalArea(focalArea)) {
+      return bundle.profiles.areas[focalArea] ?? null;
+    }
+    return null;
+  }, [bundle.profiles.areas, bundle.profiles.countries, filters.countries, filters.focalAreas]);
 
   const applyPlan = (nextPlan: AiQueryPlan) => {
     setFilters(nextPlan.filterPatch);
@@ -1996,7 +2141,8 @@ function AppContent({ bundle, geo }: { bundle: DataBundle; geo: WorldGeo }) {
       countries: nextCountries,
       regions: nextRegions
     });
-  }, [countryRegionByIso, filters.countries, filters.regions, setFilters]);
+    setActiveView("profile");
+  }, [countryRegionByIso, filters.countries, filters.regions, setActiveView, setFilters]);
   const handleRegionSelect = useCallback((region: string) => {
     if (region === "global") {
       setFilters({ regions: [], countries: [] });
@@ -2011,7 +2157,8 @@ function AppContent({ bundle, geo }: { bundle: DataBundle; geo: WorldGeo }) {
       return;
     }
     setFilters({ focalAreas: isSingleValueSelection(filters.focalAreas, focalArea) ? [] : [focalArea] });
-  }, [filters.focalAreas, setFilters]);
+    setActiveView("profile");
+  }, [filters.focalAreas, setActiveView, setFilters]);
   const handleYearThemeSelect = useCallback((year: number, focalArea: string) => {
     const sameYear = filters.startYearRange[0] === year && filters.startYearRange[1] === year;
     const sameTheme = isSingleValueSelection(filters.focalAreas, focalArea);
@@ -2124,6 +2271,7 @@ function AppContent({ bundle, geo }: { bundle: DataBundle; geo: WorldGeo }) {
               row={atlasContextRow}
               metrics={metrics}
               mode={atlasContextMode}
+              profile={selectedProfile}
               activeView={activeView}
               onViewChange={setActiveView}
               filteredProjects={filtered.projects}

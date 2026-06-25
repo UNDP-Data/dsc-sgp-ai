@@ -50,6 +50,7 @@ export const sgpRegionOptions: Array<{ key: string; label: string; className: st
 ];
 
 export const sgpViewTabs: Array<{ key: DashboardView; label: string; caption: string }> = [
+  { key: "profile", label: "Profile", caption: "SGP site content" },
   { key: "trends", label: "Time", caption: "Years and themes" },
   { key: "themes", label: "Themes", caption: "Focal mix" },
   { key: "finance", label: "Finance", caption: "Grants and partners" },
