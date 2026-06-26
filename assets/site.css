@@ -588,12 +588,31 @@ body.ai-page {
   border-radius: 999px;
 }
 
+.ai-page .suggestions-panel {
+  position: relative;
+  display: grid;
+  gap: 10px;
+}
+
+.ai-page .suggestions-heading {
+  color: #9fb2c7;
+  font-size: 12px;
+  font-weight: 820;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .ai-page .examples button:hover {
   color: #fff;
 }
 
 .ai-page .answer {
   color: #eaf4ff;
+}
+
+.ai-page .answer strong {
+  color: #fff;
+  font-weight: 840;
 }
 
 .ai-page .source-card {

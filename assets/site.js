@@ -10,7 +10,8 @@ const answerEl = document.getElementById("answer");
 const answerMeta = document.getElementById("answer-meta");
 const sourcesEl = document.getElementById("sources");
 const sourceCountEl = document.getElementById("source-count");
-const exampleButtons = Array.from(document.querySelectorAll(".examples button"));
+const suggestionsEl = document.getElementById("suggestions");
+const suggestionsTitleEl = document.getElementById("suggestions-title");
 
 let activeController = null;
 let backendReady = false;
@@ -47,6 +48,19 @@ function extractText(content) {
     if (content.content) return extractText(content.content);
   }
   return "";
+}
+
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function renderMarkdown(text) {
+  return escapeHtml(text).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
 }
 
 function uniqueDocuments(documents) {
@@ -107,6 +121,33 @@ function renderSources(documents) {
   }
 }
 
+function cleanIdeas(ideas) {
+  const seen = new Set();
+  const clean = [];
+  for (const idea of Array.isArray(ideas) ? ideas : []) {
+    const text = String(idea || "").trim();
+    const key = text.toLowerCase();
+    if (!text || seen.has(key)) continue;
+    seen.add(key);
+    clean.push(text);
+    if (clean.length >= 3) break;
+  }
+  return clean;
+}
+
+function renderIdeas(ideas) {
+  const clean = cleanIdeas(ideas);
+  if (!clean.length) return;
+  suggestionsTitleEl.textContent = "Suggested next questions";
+  suggestionsEl.replaceChildren();
+  for (const idea of clean) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = idea;
+    suggestionsEl.appendChild(button);
+  }
+}
+
 async function checkStatus() {
   try {
     const response = await fetch(`${API_BASE}/status`, { headers: { "Accept": "application/json" } });
@@ -149,10 +190,13 @@ async function streamAnswer(query, signal) {
     const text = extractText(payload.content);
     if (text) {
       answer += text;
-      answerEl.textContent = answer;
+      answerEl.innerHTML = renderMarkdown(answer);
     }
     if (Array.isArray(payload.documents)) {
       renderSources(payload.documents);
+    }
+    if (Array.isArray(payload.ideas)) {
+      renderIdeas(payload.ideas);
     }
     answerMeta.textContent = `${Math.round((performance.now() - started) / 100) / 10}s`;
   }
@@ -178,6 +222,8 @@ async function runQuery(query) {
   answerEl.textContent = "";
   sourcesEl.innerHTML = '<p class="empty">Waiting for references...</p>';
   sourceCountEl.textContent = "0 documents";
+  suggestionsTitleEl.textContent = "Generating follow-up questions...";
+  suggestionsEl.replaceChildren();
   setRunning(true);
   try {
     await streamAnswer(cleanQuery, activeController.signal);
@@ -205,11 +251,11 @@ stopButton.addEventListener("click", () => {
   if (activeController) activeController.abort();
 });
 
-for (const button of exampleButtons) {
-  button.addEventListener("click", () => {
-    queryEl.value = button.textContent;
-    runQuery(button.textContent);
-  });
-}
+suggestionsEl.addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (!button || !suggestionsEl.contains(button)) return;
+  queryEl.value = button.textContent;
+  runQuery(button.textContent);
+});
 
 checkStatus();
