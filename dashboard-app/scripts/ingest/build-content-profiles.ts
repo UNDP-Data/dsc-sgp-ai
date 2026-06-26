@@ -49,17 +49,36 @@ function firstString(...values: unknown[]) {
   return "";
 }
 
+function youtubeIdFromUrl(value: unknown) {
+  const url = firstString(value);
+  if (!url) return "";
+  const match = url.match(/(?:youtube\.com\/embed\/|youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+  return match?.[1] ?? "";
+}
+
+function normalizeProfileUrl(value: unknown) {
+  const url = firstString(value);
+  const youtubeId = youtubeIdFromUrl(url);
+  if (youtubeId) return `https://www.youtube.com/watch?v=${youtubeId}`;
+  return url;
+}
+
+function youtubeThumbnailUrl(value: unknown) {
+  const youtubeId = youtubeIdFromUrl(value);
+  return youtubeId ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg` : "";
+}
+
 function imageUrl(value: unknown): string | null {
   if (!value || typeof value !== "object") return null;
   const maybeImage = value as Record<string, unknown>;
-  return firstString(maybeImage.url, maybeImage.image_url) || null;
+  return firstString(maybeImage.final_url, maybeImage.url, maybeImage.image_url, maybeImage.original_url) || null;
 }
 
 function toLink(value: unknown, fallbackKind?: string): ContentProfileLink | null {
   if (!value || typeof value !== "object") return null;
   const item = value as Record<string, unknown>;
   const title = firstString(item.title, item.label, item.observed_title, item.caption);
-  const url = firstString(item.url, item.more_info_url, item.download_url, item.observed_url);
+  const url = normalizeProfileUrl(firstString(item.url, item.more_info_url, item.download_url, item.observed_url));
   if (!title && !url) return null;
   return {
     title: title || url,
@@ -91,6 +110,55 @@ function linksFromSection(section: unknown, limit: number, fallbackKind?: string
   const collectionItems = Array.isArray(item.collection_items) ? item.collection_items : [];
   const references = Array.isArray(item.publication_references) ? item.publication_references : [];
   return dedupeLinks([...cards, ...collectionItems, ...references].map((entry) => toLink(entry, fallbackKind)), limit);
+}
+
+function normalizedUrlKey(value: unknown) {
+  const youtubeId = youtubeIdFromUrl(value);
+  if (youtubeId) return `youtube:${youtubeId.toLowerCase()}`;
+  return String(value ?? "")
+    .trim()
+    .replace(/#.*$/, "")
+    .replace(/\?.*$/, "")
+    .replace(/\/$/, "")
+    .toLowerCase();
+}
+
+function buildStoryImageMap(records: Array<Record<string, unknown>>) {
+  const map = new Map<string, string>();
+  for (const record of records) {
+    const identity = (record.identity ?? {}) as Record<string, unknown>;
+    const images = Array.isArray(record.images) ? record.images : [];
+    const image = images.map(imageUrl).find(Boolean);
+    if (!image) continue;
+    for (const url of [identity.canonical_url, identity.source_url]) {
+      const key = normalizedUrlKey(url);
+      if (key && !map.has(key)) map.set(key, image);
+    }
+  }
+  return map;
+}
+
+function buildVideoImageMap(records: Array<Record<string, unknown>>) {
+  const map = new Map<string, string>();
+  for (const record of records) {
+    const identity = (record.identity ?? {}) as Record<string, unknown>;
+    const urls = [identity.canonical_url, identity.source_url, record.url].map(normalizeProfileUrl).filter(Boolean);
+    const image = youtubeThumbnailUrl(firstString(identity.canonical_url, identity.source_url, record.url));
+    if (!image) continue;
+    for (const url of urls) {
+      const key = normalizedUrlKey(url);
+      if (key && !map.has(key)) map.set(key, image);
+    }
+  }
+  return map;
+}
+
+function withMappedImages(links: Array<ContentProfileLink | null>, imageMap: Map<string, string>) {
+  return links.filter((link): link is ContentProfileLink => Boolean(link)).map((link) => ({
+    ...link,
+    url: normalizeProfileUrl(link.url),
+    imageUrl: link.imageUrl || imageMap.get(normalizedUrlKey(link.url)) || imageMap.get(normalizedUrlKey(normalizeProfileUrl(link.url))) || youtubeThumbnailUrl(link.url) || null
+  }));
 }
 
 function metricsFromSnapshot(profile: Record<string, unknown>) {
@@ -150,7 +218,7 @@ function sourceProfile(record: Record<string, unknown>, type: "country" | "area"
   );
 }
 
-function buildCountryProfiles(records: Array<Record<string, unknown>>) {
+function buildCountryProfiles(records: Array<Record<string, unknown>>, storyImages: Map<string, string>, videoImages: Map<string, string>) {
   const geo = readJson<GeoJSON.FeatureCollection<GeoJSON.Geometry, Record<string, unknown>>>(GEO_PATH, { type: "FeatureCollection", features: [] });
   const { lookup, isoNames } = buildCountryLookup(geo.features as GeoFeatureLike[]);
   const countries: Record<string, ContentProfile> = {};
@@ -178,10 +246,10 @@ function buildCountryProfiles(records: Array<Record<string, unknown>>) {
       collections: collectionsFromProfile(profile),
       contacts: contactsFromProfile(profile),
       publications: dedupeLinks(publications, 6),
-      stories: linksFromSection(metadata.our_stories ?? profile.our_stories, 6, "story"),
+      stories: withMappedImages(linksFromSection(metadata.our_stories ?? profile.our_stories, 6, "story"), storyImages),
       caseStudies: linksFromSection(profile.case_studies, 5, "case study"),
-      voices: linksFromSection(metadata.sgp_voices ?? profile.sgp_voices, 4, "voice"),
-      featured: toLink(metadata.featured_voice ?? profile.featured_voice, "voice")
+      voices: withMappedImages(linksFromSection(metadata.sgp_voices ?? profile.sgp_voices, 4, "voice"), videoImages),
+      featured: withMappedImages([toLink(metadata.featured_voice ?? profile.featured_voice, "voice")], videoImages)[0] ?? null
     };
   }
   return countries;
@@ -191,7 +259,7 @@ function areaKey(title: string) {
   return AREA_ALIASES[title]?.[0] ?? title;
 }
 
-function buildAreaProfiles(records: Array<Record<string, unknown>>) {
+function buildAreaProfiles(records: Array<Record<string, unknown>>, storyImages: Map<string, string>, videoImages: Map<string, string>) {
   const areas: Record<string, ContentProfile> = {};
   for (const record of records) {
     const identity = (record.identity ?? {}) as Record<string, unknown>;
@@ -215,10 +283,10 @@ function buildAreaProfiles(records: Array<Record<string, unknown>>) {
         ...linksFromSection(profile.global_publications, 6, "publication"),
         ...linksFromSection(profile.side_rail && (profile.side_rail as Record<string, unknown>).publications, 4, "publication")
       ], 8),
-      stories: linksFromSection(metadata.our_stories ?? profile.our_stories, 7, "story"),
+      stories: withMappedImages(linksFromSection(metadata.our_stories ?? profile.our_stories, 7, "story"), storyImages),
       caseStudies: linksFromSection(metadata.case_studies ?? profile.case_studies, 7, "case study"),
-      voices: linksFromSection(metadata.sgp_voices ?? profile.sgp_voices, 5, "voice"),
-      featured: toLink(metadata.featured_voice ?? profile.featured_voice, "voice")
+      voices: withMappedImages(linksFromSection(metadata.sgp_voices ?? profile.sgp_voices, 5, "voice"), videoImages),
+      featured: withMappedImages([toLink(metadata.featured_voice ?? profile.featured_voice, "voice")], videoImages)[0] ?? null
     };
   }
 
@@ -235,6 +303,8 @@ function writeJson(relativeName: string, value: unknown) {
 function main() {
   const countriesPath = path.join(CONTENT_DIR, "countries.json");
   const areasPath = path.join(CONTENT_DIR, "areas.json");
+  const storiesPath = path.join(CONTENT_DIR, "stories.json");
+  const videosPath = path.join(CONTENT_DIR, "videos.json");
   if (!fs.existsSync(countriesPath) || !fs.existsSync(areasPath)) {
     console.warn(`SGP scraper content not found at ${CONTENT_DIR}; writing empty content profiles.`);
     writeJson("content-profiles.json", { countries: {}, areas: {} } satisfies ContentProfiles);
@@ -243,11 +313,15 @@ function main() {
 
   const countryRecords = readJson<Array<Record<string, unknown>>>(countriesPath, []);
   const areaRecords = readJson<Array<Record<string, unknown>>>(areasPath, []);
+  const storyRecords = readJson<Array<Record<string, unknown>>>(storiesPath, []);
+  const videoRecords = readJson<Array<Record<string, unknown>>>(videosPath, []);
+  const storyImages = buildStoryImageMap(storyRecords);
+  const videoImages = buildVideoImageMap(videoRecords);
   const profiles: ContentProfiles = {
     generatedAt: new Date().toISOString(),
     source: SCRAPER_OUTPUT,
-    countries: buildCountryProfiles(countryRecords),
-    areas: buildAreaProfiles(areaRecords)
+    countries: buildCountryProfiles(countryRecords, storyImages, videoImages),
+    areas: buildAreaProfiles(areaRecords, storyImages, videoImages)
   };
   writeJson("content-profiles.json", profiles);
   console.log(`Wrote content profiles: ${Object.keys(profiles.countries).length} countries, ${Object.keys(profiles.areas).length} area keys`);

@@ -3501,7 +3501,7 @@ body {
 .sgp-profile-link {
   min-width: 0;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.44rem;
   align-items: center;
   min-height: 2.38rem;
@@ -3517,10 +3517,14 @@ body {
     background-color var(--motion-fast) var(--motion-ease);
 }
 
+.sgp-profile-link--media {
+  grid-template-columns: 1.85rem minmax(0, 1fr);
+}
+
 .sgp-profile-link img {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 7px;
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 6px;
   object-fit: cover;
   background: rgba(255, 249, 234, 0.1);
 }

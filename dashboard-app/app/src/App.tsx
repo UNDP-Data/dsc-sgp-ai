@@ -1002,7 +1002,7 @@ function ProfileLinkList({ title, links, emptyLabel }: { title: string; links: C
             href={link.url || undefined}
             target="_blank"
             rel="noreferrer"
-            className="sgp-profile-link"
+            className={`sgp-profile-link ${link.imageUrl ? "sgp-profile-link--media" : "sgp-profile-link--text"}`}
             data-tooltip={`${link.title}${link.kind ? ` · ${link.kind}` : ""}${link.summary ? `. ${link.summary}` : ""}`}
           >
             {link.imageUrl && <img src={link.imageUrl} alt="" loading="lazy" />}
@@ -1029,7 +1029,7 @@ function SgpContentProfilePanel({
       <section className="sgp-content-profile sgp-content-profile--empty" data-tooltip="Select one country or one thematic area to show the corresponding SGP website profile when scraper content is available.">
         <span className="eyebrow">Profile</span>
         <h2>{fallbackTitle}</h2>
-        <p>Select a country on the map or choose a single thematic area to see the matching SGP website profile, publications, stories, voices, and snapshot metrics.</p>
+        <p>Select a country on the map or choose a single thematic area to see the matching SGP website profile, publications, stories, and voices.</p>
         <div className="sgp-profile-metric-grid">
           <span><em>Grants</em><strong>{formatNumber(metrics.projectRecords ?? 0)}</strong></span>
           <span><em>Countries</em><strong>{formatNumber(metrics.countries ?? 0)}</strong></span>
@@ -1041,7 +1041,6 @@ function SgpContentProfilePanel({
   }
 
   const sourceLabel = profile.type === "country" ? "Country programme" : "Area of work";
-  const collections = profile.collections.filter((item) => item.count > 0 || item.url);
   const hasContacts = Boolean(profile.contacts?.some((contact) => contact.name || contact.email || contact.phone));
   return (
     <section className="sgp-content-profile" data-tooltip={`${sourceLabel} profile from the SGP scraper archive content, joined to the selected dashboard scope.`}>
@@ -1055,34 +1054,6 @@ function SgpContentProfilePanel({
           </a>
         )}
       </div>
-
-      {!!profile.metrics.length && (
-        <section className="sgp-profile-metric-grid" aria-label="Scraped profile metrics">
-          {profile.metrics.slice(0, 8).map((metric) => (
-            <span key={`${metric.label}-${metric.value}`} data-tooltip={`${metric.label}: ${metric.value} from the SGP website profile snapshot.`}>
-              <em>{metric.label}</em>
-              <strong>{metric.value}</strong>
-            </span>
-          ))}
-        </section>
-      )}
-
-      {!!collections.length && (
-        <section className="sgp-profile-collections" aria-label="Profile content collections">
-          {collections.map((collection) => (
-            <a
-              key={collection.key}
-              href={collection.url || undefined}
-              target="_blank"
-              rel="noreferrer"
-              data-tooltip={`${collection.label}: ${formatNumber(collection.count)} items observed in the scraper output.`}
-            >
-              <span>{collection.label}</span>
-              <strong>{formatNumber(collection.count)}</strong>
-            </a>
-          ))}
-        </section>
-      )}
 
       {profile.featured && (
         <a className="sgp-profile-featured" href={profile.featured.url || undefined} target="_blank" rel="noreferrer" data-tooltip={profile.featured.summary || profile.featured.title}>
