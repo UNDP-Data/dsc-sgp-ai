@@ -1,4 +1,4 @@
-name: Deploy SGP AI Pages
+name: Deploy SGP KLP Pages
 
 on:
   push:
@@ -35,10 +35,6 @@ jobs:
       - name: Test dashboard
         working-directory: dashboard-app/app
         run: npm test
-
-      - name: Build dashboard runtime data
-        working-directory: dashboard-app/app
-        run: npm run build:runtime
 
       - name: Build dashboard for /dashboard/
         working-directory: dashboard-app/app
