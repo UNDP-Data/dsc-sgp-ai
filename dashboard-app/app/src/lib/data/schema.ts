@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+/**
+ * Shared data contracts for the dashboard app and the pipeline processors.
+ *
+ * The TypeScript ingestion scripts import these schemas/types so generated
+ * runtime JSON and frontend rendering stay aligned after the refactor.
+ */
 export type RegionId = "RBA" | "RBAP" | "RBAS" | "RBEC" | "RBLAC" | string;
 export type StatusGroup = "completed" | "active" | "pipeline" | "terminated" | "pending" | "other";
 export type CountryMapStatus = "matched" | "alias" | "unmapped";

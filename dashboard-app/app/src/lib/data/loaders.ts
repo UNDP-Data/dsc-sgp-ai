@@ -12,6 +12,11 @@ type RuntimeTable<T> = {
   rows: unknown[][];
 };
 
+/**
+ * Resolve assets correctly for both Vite dev paths and GitHub Pages nested
+ * builds. `build:pages` uses `base=./`, so runtime JSON must resolve relative
+ * to the current dashboard route instead of the domain root.
+ */
 function publicAssetPath(path: string) {
   const cleanPath = path.replace(/^\/+/, "");
   const configuredBase = import.meta.env.BASE_URL || "/";
@@ -32,6 +37,8 @@ async function fetchJson<T>(path: string): Promise<T> {
 }
 
 function inflateRuntimeTable<T extends Record<string, unknown>>(table: RuntimeTable<T>): T[] {
+  // Pipeline runtime JSON uses a compact columnar shape to reduce Pages payload
+  // size; the dashboard expands it back into typed records at load time.
   return table.rows.map((row) => {
     const item: Record<string, unknown> = {};
     for (let index = 0; index < table.fields.length; index += 1) {
@@ -61,6 +68,7 @@ const EMPTY_PROFILES: ContentProfiles = {
 };
 
 export async function loadDataBundle(): Promise<DataBundle> {
+  /** Load the minimum runtime bundle required for the interactive dashboard. */
   const [projects, cofinancing, profiles] = await Promise.all([
     fetchRuntimeTable<ProjectRecord>(publicAssetPath("data/projects.runtime.json")),
     fetchRuntimeTable<CofinancingRecord>(publicAssetPath("data/cofinancing.runtime.json")),

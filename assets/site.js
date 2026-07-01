@@ -12,9 +12,45 @@ const sourcesEl = document.getElementById("sources");
 const sourceCountEl = document.getElementById("source-count");
 const suggestionsEl = document.getElementById("suggestions");
 const suggestionsTitleEl = document.getElementById("suggestions-title");
+const datasetHelpEl = document.getElementById("dataset-help");
+const datasetDisclaimerEl = document.getElementById("dataset-disclaimer");
+const datasetInputs = Array.from(document.querySelectorAll('input[name="dataset"]'));
 
 let activeController = null;
 let backendReady = false;
+
+const DATASET_OPTIONS = {
+  all: {
+    label: "All datasets",
+    help: "Searches both the Innovation Library and project database.",
+  },
+  innovation_library: {
+    label: "Innovation Library",
+    help: "Searches SGP publications, reports, and knowledge products from the Innovation Library.",
+  },
+  project_database: {
+    label: "Project Database",
+    help: "Searches prepared project database records and extracted project documents.",
+    disclaimer:
+      "Project Database mode currently includes only projects processed for Turkey and coral reefs. Please ask about one of those two topics.",
+  },
+};
+
+function getSelectedDataset() {
+  const selected = datasetInputs.find((input) => input.checked);
+  const value = selected && DATASET_OPTIONS[selected.value] ? selected.value : "all";
+  return { value, ...DATASET_OPTIONS[value] };
+}
+
+function updateDatasetHelp() {
+  const dataset = getSelectedDataset();
+  if (!datasetHelpEl) return;
+  datasetHelpEl.textContent = dataset.help;
+  if (!datasetDisclaimerEl) return;
+  const disclaimer = dataset.disclaimer || "";
+  datasetDisclaimerEl.textContent = disclaimer;
+  datasetDisclaimerEl.hidden = !disclaimer;
+}
 
 function setStatus(kind, text) {
   statusDot.className = `dot ${kind}`;
@@ -72,11 +108,12 @@ function uniqueDocuments(documents) {
     const url = String(item.url || "").trim();
     const summary = String(item.summary || "").trim();
     const language = String(item.language || "").trim();
+    const dataset = String(item.dataset || item.corpus || item.source_id || item.source || "").trim();
     const year = Number.isInteger(item.year) && item.year > 0 ? item.year : null;
     const key = item.document_id || url || `${title}|${year || ""}`;
     if (!key || seen.has(key)) continue;
     seen.add(key);
-    clean.push({ title: title || url || "Untitled document", url, summary, language, year });
+    clean.push({ title: title || url || "Untitled document", url, summary, language, dataset, year });
   }
   return clean;
 }
@@ -106,6 +143,7 @@ function renderSources(documents) {
     const metaParts = [];
     if (doc.year) metaParts.push(String(doc.year));
     if (doc.language) metaParts.push(doc.language);
+    if (doc.dataset) metaParts.push(doc.dataset.replace(/[_-]+/g, " "));
     if (metaParts.length) {
       const meta = document.createElement("div");
       meta.className = "meta";
@@ -168,8 +206,11 @@ async function checkStatus() {
   }
 }
 
-async function streamAnswer(query, signal) {
-  const response = await fetch(`${API_BASE}/model`, {
+async function streamAnswer(query, dataset, signal) {
+  const endpoint = new URL(`${API_BASE}/model`);
+  endpoint.searchParams.set("dataset", dataset.value);
+  endpoint.searchParams.set("corpus", dataset.value);
+  const response = await fetch(endpoint.toString(), {
     method: "POST",
     headers: { "Content-Type": "application/json", "Accept": "application/x-ndjson" },
     body: JSON.stringify([{ role: "human", content: query }]),
@@ -216,9 +257,10 @@ async function streamAnswer(query, signal) {
 async function runQuery(query) {
   const cleanQuery = String(query || "").trim();
   if (!cleanQuery || !backendReady) return;
+  const dataset = getSelectedDataset();
   if (activeController) activeController.abort();
   activeController = new AbortController();
-  answerMeta.textContent = "Streaming...";
+  answerMeta.textContent = `Streaming · ${dataset.label}`;
   answerEl.textContent = "";
   sourcesEl.innerHTML = '<p class="empty">Waiting for references...</p>';
   sourceCountEl.textContent = "0 documents";
@@ -226,7 +268,7 @@ async function runQuery(query) {
   suggestionsEl.replaceChildren();
   setRunning(true);
   try {
-    await streamAnswer(cleanQuery, activeController.signal);
+    await streamAnswer(cleanQuery, dataset, activeController.signal);
   } catch (error) {
     if (error.name !== "AbortError") {
       answerEl.innerHTML = "";
@@ -258,4 +300,9 @@ suggestionsEl.addEventListener("click", (event) => {
   runQuery(button.textContent);
 });
 
+datasetInputs.forEach((input) => {
+  input.addEventListener("change", updateDatasetHelp);
+});
+
+updateDatasetHelp();
 checkStatus();

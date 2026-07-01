@@ -1,14 +1,26 @@
 # SGP Portfolio Intelligence Dashboard
 
-Interactive React/Vite/TypeScript dashboard for the SGP project and cofinancing datasets. It includes a reproducible XLS ingestion pipeline, dashboard-ready JSON outputs, D3 charts and choropleths, cross-filtering, natural-language filter assistance, exports, and project/country detail panels.
+Interactive React/Vite/TypeScript dashboard for the SGP project and cofinancing
+datasets. The app includes D3 charts and choropleths, cross-filtering, natural
+language filter assistance, exports, and project/country detail panels.
 
-## Data Sources
+This folder now contains frontend source only. The XLS ingestion pipeline moved
+to `../../SGP-Data-Pipeline/01_Code/src/sgp_pipeline/processors/dashboard`.
 
-- `data/raw/sgp_projects.xls`
-- `data/raw/sgp_cofinancing.xls`
-- `data/geo/world-countries.geojson`
+## Runtime Data
 
-The world GeoJSON was copied from `/Users/ben/Documents/chaskipitch/public/runtime/content/geo/world-countries.geojson`, with provenance in `data/geo/authoritative-provenance.json`.
+The app reads compact runtime data from:
+
+```text
+app/public/data/projects.runtime.json
+app/public/data/cofinancing.runtime.json
+app/public/data/content-profiles.json
+app/public/data/country-aliases.json
+app/public/data/data-dictionary.json
+app/public/geo/world-countries.geojson
+```
+
+Refresh those files through the data pipeline, not with frontend npm scripts.
 
 ## Commands
 
@@ -17,85 +29,33 @@ Run commands from `app/`:
 ```bash
 cd app
 npm install
-npm run ingest
-npm run validate:data
 npm test
-npm run build
+npm run build:pages
 npm run dev
 ```
 
-Additional commands:
-
-```bash
-npm run build:aggregates
-npm run build:search
-npm run build:pages
-npm run preview
-npm run test:smoke
-```
+The legacy data scripts remain as failing placeholders so accidental frontend
+ingestion attempts point maintainers to the pipeline.
 
 ## GitHub Pages Deployment
 
-The repository is ready to deploy through GitHub Actions to GitHub Pages. The workflow lives at `.github/workflows/deploy-pages.yml` and builds the nested Vite app from `app/`.
-
-1. Create a GitHub repository and push this project to its `main` branch.
-2. In the GitHub repository, open `Settings -> Pages`.
-3. Under `Build and deployment`, set `Source` to `GitHub Actions`.
-4. Push to `main`, or run `Deploy SGP Dashboard to GitHub Pages` manually from the `Actions` tab.
-
+The frontend repository deploys through `.github/workflows/deploy-pages.yml`.
 The workflow runs:
 
 ```bash
 cd app
 npm ci
 npm test
-npm run build:runtime
 npm run build:pages
 ```
 
-The deployed artifact is `app/dist`. The workflow automatically sets the Vite base path:
+`build:pages` uses relative asset paths so the dashboard can be staged under
+`/dashboard/` in GitHub Pages.
 
-- `https://<owner>.github.io/` repos use `/`
-- `https://<owner>.github.io/<repo>/` repos use `/<repo>/`
+## Data Validation Basis
 
-To test a nested static dashboard build locally before pushing:
-
-```bash
-cd app
-npm run build:pages
-npm run preview
-```
-
-`build:pages` uses relative asset paths so the generated files can be served from a nested route such as `/dashboard/` or `/<repo>/dashboard/` without JavaScript and CSS 404s. Open the preview URL shown by Vite and verify that the dashboard loads its data and map assets. `build:runtime` creates compact runtime JSON files in `app/public/data/` and prunes large normalized/search artifacts from the deploy payload; the full processed files remain in `data/processed/` and `outputs/data/`.
-
-## Generated Outputs
-
-`npm run ingest` writes dashboard-ready data to:
-
-- `data/processed/`
-- `outputs/data/`
-- `app/public/data/`
-
-Key files:
-
-- `projects.normalized.json`
-- `cofinancing.normalized.json`
-- `cofinancing.byProject.json`
-- `aggregates.json`
-- `search-index.json`
-- `country-aliases.json`
-- `data-dictionary.json`
-
-For deployment, the app reads compact table files:
-
-- `projects.runtime.json`
-- `cofinancing.runtime.json`
-
-These are generated from the normalized files by `npm run build:runtime` and mirrored to `app/public/data/`.
-
-## Validation Basis
-
-`npm run validate:data` checks the source figures from the implementation brief using `data/processed/validation-report.json`, including:
+Pipeline validation checks the source figures from the implementation brief,
+including:
 
 - 30,753 project records
 - 30,696 unique project numbers
@@ -108,16 +68,21 @@ These are generated from the normalized files by `npm run build:runtime` and mir
 
 ## App Features
 
-- Filter Studio for geography, focal area, status, year, financial ranges, institutional type, and cofinancer type
-- KPI ribbon with live filtered portfolio metrics
-- D3 choropleth atlas using local GeoJSON and ISO3 joins
-- Trends, finance, and table views
-- Project detail drawer with cofinancing partner rows
-- Country profile drawer
-- Local natural-language query planner
-- Shareable URL filter state and export menu
-- CSV, JSON, ZIP, PNG, PDF, Markdown briefing, and filter recipe exports
+- Filter Studio for geography, focal area, status, year, financial ranges,
+  institutional type, and cofinancer type.
+- KPI ribbon with live filtered portfolio metrics.
+- D3 choropleth atlas using local GeoJSON and ISO3 joins.
+- Trends, finance, and table views.
+- Project detail drawer with cofinancing partner rows.
+- Country profile drawer.
+- Local natural-language query planner.
+- Shareable URL filter state and export menu.
+- CSV, JSON, ZIP, PNG, PDF, Markdown briefing, and filter recipe exports.
 
 ## Notes
 
-The project table is authoritative for project counts, grants, and project-level cofinancing totals. The cofinancing table is authoritative for partner, cofinancer type, and cofinancer geography analytics. Cofinancer filters select matching project rows by normalized `PROJECTNUMBER` without multiplying project-level financial metrics by cofinancing row count.
+The project table is authoritative for project counts, grants, and
+project-level cofinancing totals. The cofinancing table is authoritative for
+partner, cofinancer type, and cofinancer geography analytics. Cofinancer
+filters select matching project rows by normalized `PROJECTNUMBER` without
+multiplying project-level financial metrics by cofinancing row count.
