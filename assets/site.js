@@ -208,8 +208,7 @@ async function checkStatus() {
 
 async function streamAnswer(query, dataset, signal) {
   const endpoint = new URL(`${API_BASE}/model`);
-  endpoint.searchParams.set("dataset", dataset.value);
-  endpoint.searchParams.set("corpus", dataset.value);
+  endpoint.searchParams.set("data_source", dataset.value);
   const response = await fetch(endpoint.toString(), {
     method: "POST",
     headers: { "Content-Type": "application/json", "Accept": "application/x-ndjson" },
