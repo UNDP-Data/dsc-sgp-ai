@@ -14,6 +14,10 @@ const suggestionsEl = document.getElementById("suggestions");
 const suggestionsTitleEl = document.getElementById("suggestions-title");
 const datasetHelpEl = document.getElementById("dataset-help");
 const datasetDisclaimerEl = document.getElementById("dataset-disclaimer");
+const mapEl = document.getElementById("relevance-map");
+const mapMetaEl = document.getElementById("map-meta");
+const mapCountEl = document.getElementById("map-count");
+const mapTopEl = document.getElementById("relevance-top");
 const datasetInputs = Array.from(document.querySelectorAll('input[name="dataset"]'));
 
 let activeController = null;
@@ -97,6 +101,122 @@ function escapeHtml(text) {
 
 function renderMarkdown(text) {
   return escapeHtml(text).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+}
+
+function cleanList(value, limit = 6) {
+  const items = Array.isArray(value) ? value : String(value || "").split(/[;,]/);
+  const clean = [];
+  const seen = new Set();
+  for (const item of items) {
+    const text = String(item || "").trim();
+    const key = text.toLowerCase();
+    if (!text || seen.has(key)) continue;
+    seen.add(key);
+    clean.push(text);
+    if (clean.length >= limit) break;
+  }
+  return clean;
+}
+
+function formatPercent(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return "0%";
+  return `${Math.round(Math.max(0, Math.min(1, number)) * 100)}%`;
+}
+
+function resetRelevanceMap(dataset) {
+  if (!mapEl || !mapMetaEl || !mapCountEl || !mapTopEl) return;
+  mapMetaEl.textContent = `Scoring ${dataset.label.toLowerCase()}...`;
+  mapCountEl.textContent = "0 documents";
+  mapTopEl.replaceChildren();
+  mapEl.innerHTML = '<p class="empty">Loading document relevance...</p>';
+}
+
+function renderRelevanceTop(documents, selectedDocument = null) {
+  if (!mapTopEl) return;
+  const topDocuments = selectedDocument
+    ? [selectedDocument, ...documents.filter((doc) => doc.document_id !== selectedDocument.document_id).slice(0, 4)]
+    : documents.slice(0, 5);
+  mapTopEl.replaceChildren();
+  if (!topDocuments.length) return;
+  const heading = document.createElement("div");
+  heading.className = "relevance-top-heading";
+  heading.textContent = selectedDocument ? "Selected document" : "Top matching documents";
+  mapTopEl.appendChild(heading);
+  for (const doc of topDocuments) {
+    const row = document.createElement("article");
+    row.className = "relevance-doc";
+    const title = document.createElement(doc.url ? "a" : "strong");
+    title.textContent = doc.title || "Untitled document";
+    if (doc.url) {
+      title.href = doc.url;
+      title.target = "_blank";
+      title.rel = "noreferrer noopener";
+    }
+    row.appendChild(title);
+    const meta = document.createElement("div");
+    meta.className = "meta";
+    const metaParts = [formatPercent(doc.relevance)];
+    if (doc.year) metaParts.push(String(doc.year));
+    if (doc.source) metaParts.push(String(doc.source).replace(/[_-]+/g, " "));
+    if (doc.document_type) metaParts.push(String(doc.document_type).replace(/[_-]+/g, " "));
+    meta.textContent = metaParts.join(" · ");
+    row.appendChild(meta);
+    const tags = [...cleanList(doc.topics, 4), ...cleanList(doc.country_codes, 2), ...cleanList(doc.region_codes, 2)].slice(0, 6);
+    if (tags.length) {
+      const tagLine = document.createElement("p");
+      tagLine.textContent = tags.join(" · ");
+      row.appendChild(tagLine);
+    }
+    mapTopEl.appendChild(row);
+  }
+}
+
+function renderRelevanceMap(payload, dataset) {
+  if (!mapEl || !mapMetaEl || !mapCountEl || !mapTopEl) return;
+  const documents = Array.isArray(payload.documents) ? payload.documents : [];
+  const sorted = [...documents].sort((a, b) => Number(b.relevance || 0) - Number(a.relevance || 0));
+  mapCountEl.textContent = `${documents.length.toLocaleString()} document${documents.length === 1 ? "" : "s"}`;
+  mapMetaEl.textContent = `Document-level relevance · ${dataset.label}`;
+  mapEl.replaceChildren();
+  if (!documents.length) {
+    mapEl.innerHTML = '<p class="empty">No documents are available for this corpus selection.</p>';
+    mapTopEl.replaceChildren();
+    return;
+  }
+  for (const doc of sorted) {
+    const relevance = Math.max(0, Math.min(1, Number(doc.relevance || 0)));
+    const tile = document.createElement("button");
+    tile.type = "button";
+    tile.className = "relevance-tile";
+    tile.style.setProperty("--score", String(relevance));
+    tile.title = `${doc.title || "Untitled document"} · ${formatPercent(relevance)}`;
+    tile.setAttribute("aria-label", tile.title);
+    tile.addEventListener("mouseenter", () => renderRelevanceTop(sorted, doc));
+    tile.addEventListener("focus", () => renderRelevanceTop(sorted, doc));
+    tile.addEventListener("click", () => renderRelevanceTop(sorted, doc));
+    mapEl.appendChild(tile);
+  }
+  renderRelevanceTop(sorted);
+}
+
+async function loadRelevanceMap(query, dataset, signal) {
+  if (!mapEl || !mapMetaEl || !mapCountEl || !mapTopEl) return;
+  resetRelevanceMap(dataset);
+  try {
+    const endpoint = new URL(`${API_BASE}/relevance-map`);
+    endpoint.searchParams.set("query", query);
+    endpoint.searchParams.set("data_source", dataset.value);
+    const response = await fetch(endpoint.toString(), { headers: { "Accept": "application/json" }, signal });
+    if (!response.ok) throw new Error(await readError(response));
+    renderRelevanceMap(await response.json(), dataset);
+  } catch (error) {
+    if (error.name === "AbortError") return;
+    mapMetaEl.textContent = "Corpus map unavailable";
+    mapCountEl.textContent = "0 documents";
+    mapTopEl.replaceChildren();
+    mapEl.innerHTML = '<p class="warning">Corpus map could not load. Answers and sources still work.</p>';
+  }
 }
 
 function uniqueDocuments(documents) {
@@ -265,6 +385,7 @@ async function runQuery(query) {
   sourceCountEl.textContent = "0 documents";
   suggestionsTitleEl.textContent = "Generating follow-up questions...";
   suggestionsEl.replaceChildren();
+  loadRelevanceMap(cleanQuery, dataset, activeController.signal);
   setRunning(true);
   try {
     await streamAnswer(cleanQuery, dataset, activeController.signal);

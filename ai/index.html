@@ -83,6 +83,21 @@
     </section>
 
     <section class="workspace" aria-label="Answer workspace">
+
+      <article class="map-panel" aria-label="Corpus relevance map">
+        <div class="panel-title-row">
+          <div>
+            <h2>Corpus Map</h2>
+            <p id="map-meta" class="muted">Run a query to score the selected corpus.</p>
+          </div>
+          <span id="map-count" class="muted">0 documents</span>
+        </div>
+        <div id="relevance-map" class="relevance-map" aria-live="polite">
+          <p class="empty">Document relevance will appear as a heatmap after you ask a question.</p>
+        </div>
+        <div id="relevance-top" class="relevance-top" aria-live="polite"></div>
+      </article>
+
       <article class="answer-panel">
         <div class="panel-title-row">
           <h2>Answer</h2>
