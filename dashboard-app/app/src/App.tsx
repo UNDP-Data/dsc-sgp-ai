@@ -29,7 +29,6 @@ import type {
   AggregateRow,
   CofinancingRecord,
   ContentProfile,
-  ContentProfileLink,
   DataBundle,
   MetricKey,
   PortfolioMetrics,
@@ -1026,126 +1025,6 @@ function ProfileLinkList({
   );
 }
 
-function ProfileMediaGallery({ links }: { links: ContentProfileLink[] }) {
-  const mediaCandidates = useMemo(() => {
-    const pool = links.filter((link) => Boolean(link.imageUrl || link.url));
-    for (let index = pool.length - 1; index > 0; index -= 1) {
-      const swapIndex = Math.floor(Math.random() * (index + 1));
-      [pool[index], pool[swapIndex]] = [pool[swapIndex], pool[index]];
-    }
-    return pool.slice(0, 48);
-  }, [links]);
-  const [failedMedia, setFailedMedia] = useState<Set<string>>(() => new Set());
-  const [loadedMedia, setLoadedMedia] = useState<Set<string>>(() => new Set());
-  const [activeMedia, setActiveMedia] = useState<ContentProfileLink | null>(null);
-
-  useEffect(() => {
-    setFailedMedia(new Set());
-    setLoadedMedia(new Set());
-    setActiveMedia(null);
-  }, [links]);
-
-  const mediaKey = useCallback((link: ContentProfileLink) => link.imageUrl || link.url || link.title, []);
-  useEffect(() => {
-    let cancelled = false;
-    setFailedMedia(new Set());
-    setLoadedMedia(new Set());
-
-    for (const link of mediaCandidates) {
-      const src = link.imageUrl || link.url;
-      if (!src) continue;
-      const key = mediaKey(link);
-      const image = new Image();
-      image.onload = () => {
-        if (cancelled) return;
-        if (image.naturalWidth < 8 || image.naturalHeight < 8) {
-          setFailedMedia((current) => {
-            const next = new Set(current);
-            next.add(key);
-            return next;
-          });
-          return;
-        }
-        setLoadedMedia((current) => {
-          const next = new Set(current);
-          next.add(key);
-          return next;
-        });
-      };
-      image.onerror = () => {
-        if (cancelled) return;
-        setFailedMedia((current) => {
-          const next = new Set(current);
-          next.add(key);
-          return next;
-        });
-      };
-      image.src = src;
-    }
-
-    return () => {
-      cancelled = true;
-    };
-  }, [mediaCandidates, mediaKey]);
-
-  const visibleMedia = mediaCandidates.filter((link) => loadedMedia.has(mediaKey(link)) && !failedMedia.has(mediaKey(link))).slice(0, 5);
-  const mediaColumns = [visibleMedia.slice(0, 2), visibleMedia.slice(2, 5)];
-
-  const handleImageError = useCallback((link: ContentProfileLink) => {
-    const key = mediaKey(link);
-    setFailedMedia((current) => {
-      const next = new Set(current);
-      next.add(key);
-      return next;
-    });
-    setActiveMedia((current) => (current && mediaKey(current) === key ? null : current));
-  }, [mediaKey]);
-
-  if (!visibleMedia.length) return null;
-
-  return (
-    <section className="sgp-profile-media" aria-label="Country media" data-tooltip="Gallery photos tagged to this country in the SGP scraper archive.">
-      <div className="sgp-profile-media__head">
-        <span>Media</span>
-        <strong>{formatNumber(visibleMedia.length)}</strong>
-      </div>
-      {activeMedia && (
-        <div className="sgp-profile-media-viewer" data-tooltip={activeMedia.title}>
-          <button type="button" className="sgp-profile-media-viewer__close" aria-label="Close media viewer" onClick={() => setActiveMedia(null)}>
-            <X size={13} aria-hidden="true" />
-          </button>
-          <img src={activeMedia.imageUrl || activeMedia.url} alt={activeMedia.title} onError={() => handleImageError(activeMedia)} />
-          <div className="sgp-profile-media-viewer__caption">
-            <strong>{activeMedia.title}</strong>
-            {activeMedia.url && (
-              <a href={activeMedia.url} target="_blank" rel="noreferrer">
-                Open image
-              </a>
-            )}
-          </div>
-        </div>
-      )}
-      <div className="sgp-profile-media__columns">
-        {mediaColumns.map((column, columnIndex) => (
-          <div className="sgp-profile-media__column" key={`media-column-${columnIndex}`}>
-            {column.map((link) => (
-              <button
-                type="button"
-                key={mediaKey(link)}
-                className={`sgp-profile-media__item ${activeMedia && mediaKey(activeMedia) === mediaKey(link) ? "is-active" : ""}`}
-                data-tooltip={link.title}
-                onClick={() => setActiveMedia(link)}
-              >
-                <img src={link.imageUrl || link.url} alt="" loading="lazy" onError={() => handleImageError(link)} />
-              </button>
-            ))}
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 function SgpContentProfilePanel({
   profile,
   fallbackTitle,
@@ -1173,10 +1052,9 @@ function SgpContentProfilePanel({
 
   const sourceLabel = profile.type === "country" ? "Country programme" : "Area of work";
   const hasContacts = Boolean(profile.contacts?.some((contact) => contact.name || contact.email || contact.phone));
-  const mediaLinks = profile.type === "country" ? profile.media ?? [] : [];
   return (
     <section className="sgp-content-profile" data-tooltip={`${sourceLabel} profile from the SGP scraper archive content, joined to the selected dashboard scope.`}>
-      <div className={`sgp-content-profile__hero ${mediaLinks.length ? "sgp-content-profile__hero--with-media" : ""}`}>
+      <div className="sgp-content-profile__hero">
         <div className="sgp-content-profile__hero-copy">
           <span className="eyebrow">{sourceLabel}</span>
           <h2>{profile.title}</h2>
@@ -1187,7 +1065,6 @@ function SgpContentProfilePanel({
             </a>
           )}
         </div>
-        <ProfileMediaGallery links={mediaLinks} />
       </div>
 
       {profile.featured && (
