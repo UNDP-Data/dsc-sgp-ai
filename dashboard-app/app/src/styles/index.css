@@ -1481,6 +1481,7 @@ body {
   stroke-opacity: 0.72;
   stroke-width: calc(0.6px * var(--map-scale-inverse, 1));
   transition:
+    fill var(--motion-slow) var(--motion-ease),
     fill-opacity var(--motion-fast) var(--motion-ease),
     stroke var(--motion-fast) var(--motion-ease),
     stroke-opacity var(--motion-fast) var(--motion-ease),
@@ -2039,7 +2040,7 @@ body {
 .atlas-kpi-ribbon .kpi-label {
   font-size: 0.82rem;
   line-height: 1.08;
-  font-weight: 760;
+  font-weight: 900;
   color: color-mix(in srgb, var(--impact-kpi-text) 72%, #ffffff 28%);
 }
 
@@ -2048,7 +2049,7 @@ body {
   font-size: clamp(1.55rem, 1.2vw + 1.05rem, 2.15rem);
   line-height: 1.12;
   color: var(--impact-kpi-text);
-  font-weight: 920;
+  font-weight: 520;
   white-space: nowrap;
   overflow: visible;
   text-overflow: clip;
@@ -3164,11 +3165,13 @@ body {
 
 .sgp-context-rail .atlas-kpi-ribbon .kpi-label {
   font-size: 0.72rem;
+  font-weight: 900;
 }
 
 .sgp-context-rail .atlas-kpi-ribbon .kpi-value {
-  font-size: clamp(1.22rem, 0.66vw + 0.86rem, 1.5rem);
+  font-size: clamp(1.16rem, 0.62vw + 0.82rem, 1.42rem);
   line-height: 1.08;
+  font-weight: 520;
   overflow: hidden;
   text-overflow: clip;
 }
