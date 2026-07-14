@@ -228,6 +228,7 @@ export type ContentProfile = {
   stories: ContentProfileLink[];
   caseStudies: ContentProfileLink[];
   voices: ContentProfileLink[];
+  media?: ContentProfileLink[];
   featured?: ContentProfileLink | null;
 };
 

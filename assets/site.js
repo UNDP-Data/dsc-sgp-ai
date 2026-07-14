@@ -22,6 +22,8 @@ const datasetInputs = Array.from(document.querySelectorAll('input[name="dataset"
 
 let activeController = null;
 let backendReady = false;
+let queryRunning = false;
+let statusRequestId = 0;
 
 const DATASET_OPTIONS = {
   all: {
@@ -36,7 +38,7 @@ const DATASET_OPTIONS = {
     label: "Project Database",
     help: "Searches prepared project database records and extracted project documents.",
     disclaimer:
-      "Project Database mode currently includes only projects processed for Turkey and coral reefs. Please ask about one of those two topics.",
+      "Project Database mode currently includes only projects processed for Turkey and coral reefs.",
   },
 };
 
@@ -53,17 +55,19 @@ function updateDatasetHelp() {
   if (!datasetDisclaimerEl) return;
   const disclaimer = dataset.disclaimer || "";
   datasetDisclaimerEl.textContent = disclaimer;
-  datasetDisclaimerEl.hidden = !disclaimer;
+  datasetDisclaimerEl.classList.toggle("is-hidden", !disclaimer);
+  datasetDisclaimerEl.setAttribute("aria-hidden", String(!disclaimer));
 }
 
 function setStatus(kind, text) {
   statusDot.className = `dot ${kind}`;
   statusLabel.textContent = text;
   backendReady = kind === "good";
-  submitButton.disabled = !backendReady;
+  submitButton.disabled = queryRunning || !backendReady;
 }
 
 function setRunning(isRunning) {
+  queryRunning = isRunning;
   submitButton.disabled = isRunning || !backendReady;
   stopButton.hidden = !isRunning;
 }
@@ -99,8 +103,17 @@ function escapeHtml(text) {
     .replace(/'/g, "&#39;");
 }
 
+const entityDecoder = document.createElement("textarea");
+
+function decodeHtmlEntities(text) {
+  entityDecoder.innerHTML = String(text)
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  return entityDecoder.value;
+}
+
 function renderMarkdown(text) {
-  return escapeHtml(text).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  return escapeHtml(decodeHtmlEntities(text)).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
 }
 
 function cleanList(value, limit = 6) {
@@ -224,11 +237,11 @@ function uniqueDocuments(documents) {
   const clean = [];
   for (const item of Array.isArray(documents) ? documents : []) {
     if (!item || typeof item !== "object") continue;
-    const title = String(item.title || item.canonical_title || "").trim();
+    const title = decodeHtmlEntities(item.title || item.canonical_title || "").trim();
     const url = String(item.url || "").trim();
-    const summary = String(item.summary || "").trim();
-    const language = String(item.language || "").trim();
-    const dataset = String(item.dataset || item.corpus || item.source_id || item.source || "").trim();
+    const summary = decodeHtmlEntities(item.summary || "").trim();
+    const language = decodeHtmlEntities(item.language || "").trim();
+    const dataset = decodeHtmlEntities(item.dataset || item.corpus || item.source_id || item.source || "").trim();
     const year = Number.isInteger(item.year) && item.year > 0 ? item.year : null;
     const key = item.document_id || url || `${title}|${year || ""}`;
     if (!key || seen.has(key)) continue;
@@ -283,7 +296,7 @@ function cleanIdeas(ideas) {
   const seen = new Set();
   const clean = [];
   for (const idea of Array.isArray(ideas) ? ideas : []) {
-    const text = String(idea || "").trim();
+    const text = decodeHtmlEntities(idea || "").trim();
     const key = text.toLowerCase();
     if (!text || seen.has(key)) continue;
     seen.add(key);
@@ -307,16 +320,26 @@ function renderIdeas(ideas) {
 }
 
 async function checkStatus() {
+  const requestId = ++statusRequestId;
+  const dataset = getSelectedDataset();
+  statusDot.className = "dot loading";
+  statusLabel.textContent = `Checking ${dataset.label.toLowerCase()}...`;
+  backendReady = false;
+  submitButton.disabled = true;
   try {
-    const response = await fetch(`${API_BASE}/status`, { headers: { "Accept": "application/json" } });
+    const endpoint = new URL(`${API_BASE}/status`);
+    endpoint.searchParams.set("data_source", dataset.value);
+    const response = await fetch(endpoint.toString(), { headers: { "Accept": "application/json" } });
     if (!response.ok) throw new Error(await readError(response));
     const payload = await response.json();
+    if (requestId !== statusRequestId || getSelectedDataset().value !== dataset.value) return;
     if (payload.corpus_ready) {
       setStatus("good", `Ready · ${payload.document_count.toLocaleString()} documents`);
     } else {
       setStatus("bad", "Corpus unavailable");
     }
   } catch (error) {
+    if (requestId !== statusRequestId) return;
     setStatus("bad", "Backend unavailable");
     answerEl.innerHTML = "";
     const message = document.createElement("p");
@@ -421,7 +444,10 @@ suggestionsEl.addEventListener("click", (event) => {
 });
 
 datasetInputs.forEach((input) => {
-  input.addEventListener("change", updateDatasetHelp);
+  input.addEventListener("change", () => {
+    updateDatasetHelp();
+    checkStatus();
+  });
 });
 
 updateDatasetHelp();

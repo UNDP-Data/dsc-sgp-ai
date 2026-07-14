@@ -36,17 +36,19 @@
       <form id="query-form" class="query-form">
         <fieldset class="dataset-selector" aria-labelledby="dataset-selector-label">
           <legend id="dataset-selector-label">RAG dataset</legend>
-          <div class="dataset-track" role="radiogroup" aria-label="RAG dataset">
-            <input id="dataset-all" type="radio" name="dataset" value="all" checked>
-            <label for="dataset-all">All</label>
-            <input id="dataset-innovation-library" type="radio" name="dataset" value="innovation_library">
-            <label for="dataset-innovation-library">Innovation Library</label>
-            <input id="dataset-project-database" type="radio" name="dataset" value="project_database">
-            <label for="dataset-project-database">Project Database</label>
-            <span class="dataset-thumb" aria-hidden="true"></span>
+          <div class="dataset-control-row">
+            <div class="dataset-track" role="radiogroup" aria-label="RAG dataset">
+              <input id="dataset-all" type="radio" name="dataset" value="all" checked>
+              <label for="dataset-all">All</label>
+              <input id="dataset-innovation-library" type="radio" name="dataset" value="innovation_library">
+              <label for="dataset-innovation-library">Innovation Library</label>
+              <input id="dataset-project-database" type="radio" name="dataset" value="project_database">
+              <label for="dataset-project-database">Project Database</label>
+              <span class="dataset-thumb" aria-hidden="true"></span>
+            </div>
+            <p id="dataset-disclaimer" class="dataset-disclaimer is-hidden" aria-hidden="true"></p>
           </div>
           <p id="dataset-help" class="dataset-help">Searches both the Innovation Library and project database.</p>
-          <p id="dataset-disclaimer" class="dataset-disclaimer" hidden></p>
         </fieldset>
 
         <div class="query-form-header">
@@ -83,20 +85,6 @@
     </section>
 
     <section class="workspace" aria-label="Answer workspace">
-
-      <article class="map-panel" aria-label="Corpus relevance map">
-        <div class="panel-title-row">
-          <div>
-            <h2>Corpus Map</h2>
-            <p id="map-meta" class="muted">Run a query to score the selected corpus.</p>
-          </div>
-          <span id="map-count" class="muted">0 documents</span>
-        </div>
-        <div id="relevance-map" class="relevance-map" aria-live="polite">
-          <p class="empty">Document relevance will appear as a heatmap after you ask a question.</p>
-        </div>
-        <div id="relevance-top" class="relevance-top" aria-live="polite"></div>
-      </article>
 
       <article class="answer-panel">
         <div class="panel-title-row">

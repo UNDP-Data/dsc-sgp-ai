@@ -29,6 +29,7 @@ import type {
   AggregateRow,
   CofinancingRecord,
   ContentProfile,
+  ContentProfileLink,
   DataBundle,
   MetricKey,
   PortfolioMetrics,
@@ -988,9 +989,19 @@ function SgpViewTabs({ active, onChange }: { active: DashboardView; onChange: (v
   );
 }
 
-function ProfileLinkList({ title, links, emptyLabel }: { title: string; links: ContentProfile["stories"]; emptyLabel: string }) {
+function ProfileLinkList({
+  title,
+  links,
+  emptyLabel,
+  variant = "default"
+}: {
+  title: string;
+  links: ContentProfile["stories"];
+  emptyLabel: string;
+  variant?: "default" | "publication" | "voice";
+}) {
   return (
-    <section className="sgp-profile-section">
+    <section className={`sgp-profile-section sgp-profile-section--${variant}`}>
       <div className="sgp-profile-section__head">
         <h3>{title}</h3>
         <span>{formatNumber(links.length)}</span>
@@ -1010,6 +1021,41 @@ function ProfileLinkList({ title, links, emptyLabel }: { title: string; links: C
           </a>
         ))}
         {!links.length && <p className="sgp-profile-empty">{emptyLabel}</p>}
+      </div>
+    </section>
+  );
+}
+
+function ProfileMediaGallery({ links }: { links: ContentProfileLink[] }) {
+  if (!links.length) return null;
+
+  return (
+    <section className="sgp-profile-media" aria-label="Country media" data-tooltip="Gallery photos tagged to this country in the SGP scraper archive.">
+      <div className="sgp-profile-media__head">
+        <span>Media</span>
+        <strong>{formatNumber(links.length)}</strong>
+      </div>
+      <div className="sgp-profile-media__grid">
+        {links.map((link, index) => (
+          <a
+            key={`${link.imageUrl ?? link.url}-${index}`}
+            href={link.url || link.imageUrl || undefined}
+            target="_blank"
+            rel="noreferrer"
+            className="sgp-profile-media__item"
+            data-tooltip={link.title}
+          >
+            <img
+              src={link.imageUrl || link.url}
+              alt=""
+              loading="lazy"
+              onError={(event) => {
+                event.currentTarget.closest(".sgp-profile-media__item")?.classList.add("is-missing-image");
+              }}
+            />
+            <span>{link.title}</span>
+          </a>
+        ))}
       </div>
     </section>
   );
@@ -1042,17 +1088,21 @@ function SgpContentProfilePanel({
 
   const sourceLabel = profile.type === "country" ? "Country programme" : "Area of work";
   const hasContacts = Boolean(profile.contacts?.some((contact) => contact.name || contact.email || contact.phone));
+  const mediaLinks = profile.type === "country" ? profile.media ?? [] : [];
   return (
     <section className="sgp-content-profile" data-tooltip={`${sourceLabel} profile from the SGP scraper archive content, joined to the selected dashboard scope.`}>
-      <div className="sgp-content-profile__hero">
-        <span className="eyebrow">{sourceLabel}</span>
-        <h2>{profile.title}</h2>
-        {profile.summary && <p>{profile.summary}</p>}
-        {profile.sourceUrl && (
-          <a className="sgp-profile-source" href={profile.sourceUrl} target="_blank" rel="noreferrer" data-tooltip="Source SGP website page captured by the scraper archive.">
-            Open SGP source
-          </a>
-        )}
+      <div className={`sgp-content-profile__hero ${mediaLinks.length ? "sgp-content-profile__hero--with-media" : ""}`}>
+        <div className="sgp-content-profile__hero-copy">
+          <span className="eyebrow">{sourceLabel}</span>
+          <h2>{profile.title}</h2>
+          {profile.summary && <p>{profile.summary}</p>}
+          {profile.sourceUrl && (
+            <a className="sgp-profile-source" href={profile.sourceUrl} target="_blank" rel="noreferrer" data-tooltip="Source SGP website page captured by the scraper archive.">
+              Open SGP source
+            </a>
+          )}
+        </div>
+        <ProfileMediaGallery links={mediaLinks} />
       </div>
 
       {profile.featured && (
@@ -1080,8 +1130,8 @@ function SgpContentProfilePanel({
       )}
 
       <ProfileLinkList title="Stories" links={profile.stories} emptyLabel="No story cards were present for this profile in the scraper output." />
-      <ProfileLinkList title={profile.type === "area" ? "Case studies" : "Publications"} links={profile.type === "area" ? profile.caseStudies : profile.publications} emptyLabel="No publication or case-study links were present in the scraper output." />
-      <ProfileLinkList title="Voices" links={profile.voices} emptyLabel="No voice/video items were present for this profile in the scraper output." />
+      <ProfileLinkList title={profile.type === "area" ? "Case studies" : "Publications"} links={profile.type === "area" ? profile.caseStudies : profile.publications} emptyLabel="No publication or case-study links were present in the scraper output." variant={profile.type === "area" ? "default" : "publication"} />
+      <ProfileLinkList title="Voices" links={profile.voices} emptyLabel="No voice/video items were present for this profile in the scraper output." variant="voice" />
     </section>
   );
 }
