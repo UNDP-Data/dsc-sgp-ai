@@ -1152,7 +1152,6 @@ function SgpAtlasContextCard({
 
       <div className="sgp-context-head" data-tooltip={`${mode}: ${row?.label ?? "Global portfolio"}. Metrics and charts reflect the current active filters.`}>
         <div>
-          <p className="atlas-figure-intro__kicker">SGP atlas context</p>
           <h2>{row?.label ?? "Global portfolio"}</h2>
         </div>
       </div>

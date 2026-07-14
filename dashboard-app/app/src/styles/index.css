@@ -2007,10 +2007,10 @@ body {
 }
 
 .atlas-kpi-ribbon .kpi-card {
-  min-height: 38px;
-  width: 124px;
-  max-width: 124px;
-  padding: 0.22rem 0.32rem;
+  min-height: 74px;
+  width: 144px;
+  max-width: 144px;
+  padding: 0.34rem 0.42rem;
   border: 1px solid rgba(255,255,255,0.22);
   border-radius: 9px;
   backdrop-filter: blur(8px);
@@ -2037,20 +2037,21 @@ body {
 }
 
 .atlas-kpi-ribbon .kpi-label {
-  font-size: 0.62rem;
-  line-height: 1.15;
+  font-size: 0.82rem;
+  line-height: 1.08;
+  font-weight: 760;
   color: color-mix(in srgb, var(--impact-kpi-text) 72%, #ffffff 28%);
 }
 
 .atlas-kpi-ribbon .kpi-value {
-  margin-top: 0.08rem;
-  font-size: clamp(0.82rem, 0.55vw + 0.64rem, 1.02rem);
-  line-height: 1.08;
+  margin-top: 0.12rem;
+  font-size: clamp(1.55rem, 1.2vw + 1.05rem, 2.15rem);
+  line-height: 1.12;
   color: var(--impact-kpi-text);
-  font-weight: 850;
+  font-weight: 920;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 .atlas-filter-console {
@@ -3151,12 +3152,25 @@ body {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.24rem;
+  gap: 0.18rem;
 }
 
 .sgp-context-rail .atlas-kpi-ribbon .kpi-card {
   width: 100%;
   max-width: none;
+  min-height: 62px;
+  padding: 0.3rem 0.2rem;
+}
+
+.sgp-context-rail .atlas-kpi-ribbon .kpi-label {
+  font-size: 0.72rem;
+}
+
+.sgp-context-rail .atlas-kpi-ribbon .kpi-value {
+  font-size: clamp(1.22rem, 0.66vw + 0.86rem, 1.5rem);
+  line-height: 1.08;
+  overflow: hidden;
+  text-overflow: clip;
 }
 
 .sgp-context-rail .atlas-context-card {
@@ -4209,18 +4223,18 @@ body {
   }
 
   .atlas-kpi-ribbon .kpi-card {
-    flex: 0 0 116px;
-    width: 116px;
-    min-height: 36px;
-    padding: 0.2rem 0.28rem;
+    flex: 0 0 136px;
+    width: 136px;
+    min-height: 50px;
+    padding: 0.3rem 0.38rem;
   }
 
   .atlas-kpi-ribbon .kpi-label {
-    font-size: 0.56rem;
+    font-size: 0.68rem;
   }
 
   .atlas-kpi-ribbon .kpi-value {
-    font-size: 0.78rem;
+    font-size: 1.26rem;
   }
 
   .atlas-theme-ribbon {
@@ -4415,15 +4429,16 @@ body {
 
   .atlas-kpi-ribbon .kpi-card {
     min-width: 0;
-    padding: 0.2rem 0.22rem;
+    min-height: 46px;
+    padding: 0.28rem 0.28rem;
   }
 
   .atlas-kpi-ribbon .kpi-label {
-    font-size: 0.5rem;
+    font-size: 0.62rem;
   }
 
   .atlas-kpi-ribbon .kpi-value {
-    font-size: 0.72rem;
+    font-size: 1.08rem;
   }
 
   .atlas-filter-console {

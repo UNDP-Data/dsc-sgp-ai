@@ -13,7 +13,6 @@ const sourceCountEl = document.getElementById("source-count");
 const suggestionsEl = document.getElementById("suggestions");
 const suggestionsTitleEl = document.getElementById("suggestions-title");
 const datasetHelpEl = document.getElementById("dataset-help");
-const datasetDisclaimerEl = document.getElementById("dataset-disclaimer");
 const mapEl = document.getElementById("relevance-map");
 const mapMetaEl = document.getElementById("map-meta");
 const mapCountEl = document.getElementById("map-count");
@@ -37,7 +36,7 @@ const DATASET_OPTIONS = {
   project_database: {
     label: "Project Database",
     help: "Searches prepared project database records and extracted project documents.",
-    disclaimer:
+    inlineDisclaimer:
       "Project Database mode currently includes only projects processed for Turkey and coral reefs.",
   },
 };
@@ -51,12 +50,14 @@ function getSelectedDataset() {
 function updateDatasetHelp() {
   const dataset = getSelectedDataset();
   if (!datasetHelpEl) return;
-  datasetHelpEl.textContent = dataset.help;
-  if (!datasetDisclaimerEl) return;
-  const disclaimer = dataset.disclaimer || "";
-  datasetDisclaimerEl.textContent = disclaimer;
-  datasetDisclaimerEl.classList.toggle("is-hidden", !disclaimer);
-  datasetDisclaimerEl.setAttribute("aria-hidden", String(!disclaimer));
+  datasetHelpEl.textContent = "";
+  datasetHelpEl.append(document.createTextNode(dataset.help));
+  if (dataset.inlineDisclaimer) {
+    const disclaimer = document.createElement("span");
+    disclaimer.className = "dataset-inline-disclaimer";
+    disclaimer.textContent = ` ${dataset.inlineDisclaimer}`;
+    datasetHelpEl.append(disclaimer);
+  }
 }
 
 function setStatus(kind, text) {
