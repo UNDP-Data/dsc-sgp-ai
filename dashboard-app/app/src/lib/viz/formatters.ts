@@ -1,36 +1,21 @@
-export const usd = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0
-});
-
-export const usdCompact = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  notation: "compact",
-  maximumFractionDigits: 1
-});
-
-export const number = new Intl.NumberFormat("en-US");
-
-export const compactNumber = new Intl.NumberFormat("en-US", {
-  notation: "compact",
-  maximumFractionDigits: 1
-});
-
-export const percent = new Intl.NumberFormat("en-US", {
-  style: "percent",
-  maximumFractionDigits: 1
-});
-
 const COMPACT_THRESHOLD = 1_000;
+
+function activeLocale() {
+  if (typeof document === "undefined") return "en";
+  return document.documentElement.lang || "en";
+}
 
 export function formatMoney(value: number | null | undefined, options: { compact?: boolean } = {}) {
   if (value == null || !Number.isFinite(value)) {
     return "n/a";
   }
   const shouldCompact = options.compact ?? Math.abs(value) >= COMPACT_THRESHOLD;
-  return shouldCompact ? usdCompact.format(value) : usd.format(value);
+  return new Intl.NumberFormat(activeLocale(), {
+    style: "currency",
+    currency: "USD",
+    notation: shouldCompact ? "compact" : "standard",
+    maximumFractionDigits: shouldCompact ? 1 : 0
+  }).format(value);
 }
 
 export function formatNumber(value: number | null | undefined, options: { compact?: boolean } = {}) {
@@ -38,7 +23,10 @@ export function formatNumber(value: number | null | undefined, options: { compac
     return "n/a";
   }
   const shouldCompact = options.compact ?? Math.abs(value) >= COMPACT_THRESHOLD;
-  return shouldCompact ? compactNumber.format(value) : number.format(value);
+  return new Intl.NumberFormat(activeLocale(), {
+    notation: shouldCompact ? "compact" : "standard",
+    maximumFractionDigits: shouldCompact ? 1 : 3
+  }).format(value);
 }
 
 export function formatMetric(value: number | null | undefined, type: "money" | "number" | "ratio" = "number") {

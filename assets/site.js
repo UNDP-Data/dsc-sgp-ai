@@ -1,4 +1,21 @@
 const API_BASE = "https://sea-ai-api.azurewebsites.net/pages/sgp-ai";
+const i18n = window.SGPI18n;
+
+function t(value, variables = {}) {
+  return i18n?.t(value, variables) ?? String(value ?? "");
+}
+
+function currentLocale() {
+  return i18n?.getLocale() ?? "en";
+}
+
+function formatLocaleNumber(value, options) {
+  return i18n?.formatNumber(value, options) ?? Number(value).toLocaleString();
+}
+
+function documentCountLabel(count) {
+  return `${formatLocaleNumber(count)} ${t(count === 1 ? "document" : "documents")}`;
+}
 
 const form = document.getElementById("query-form");
 const queryEl = document.getElementById("query");
@@ -12,51 +29,60 @@ const sourcesEl = document.getElementById("sources");
 const sourceCountEl = document.getElementById("source-count");
 const suggestionsEl = document.getElementById("suggestions");
 const suggestionsTitleEl = document.getElementById("suggestions-title");
-const datasetHelpEl = document.getElementById("dataset-help");
 const mapEl = document.getElementById("relevance-map");
 const mapMetaEl = document.getElementById("map-meta");
 const mapCountEl = document.getElementById("map-count");
 const mapTopEl = document.getElementById("relevance-top");
-const datasetInputs = Array.from(document.querySelectorAll('input[name="dataset"]'));
 
 let activeController = null;
 let backendReady = false;
 let queryRunning = false;
 let statusRequestId = 0;
 
-const DATASET_OPTIONS = {
-  all: {
-    label: "All datasets",
-    help: "Searches both the Innovation Library and project database.",
-  },
-  innovation_library: {
-    label: "Innovation Library",
-    help: "Searches SGP publications, reports, and knowledge products from the Innovation Library.",
-  },
-  project_database: {
-    label: "Project Database",
-    help: "Searches prepared project database records and extracted project documents.",
-    inlineDisclaimer:
-      "Project Database mode currently includes only projects processed for Turkey and coral reefs.",
-  },
-};
+const DATASET = Object.freeze({
+  value: "innovation_library",
+  label: "Innovation Library",
+});
+const STARTER_QUESTIONS = [
+  "What lessons have SGP-supported grants generated on coastal resilience?",
+  "Which SGP knowledge products discuss Indigenous Peoples and biodiversity?",
+  "What evidence do SGP publications provide on community-based adaptation?",
+  "How have women-led grantee initiatives strengthened environmental outcomes and local livelihoods?",
+  "What roles have young people played in SGP-supported environmental initiatives?",
+  "How has traditional knowledge informed conservation decisions in SGP-supported grants?",
+  "What approaches to ecosystem restoration appear across SGP publications?",
+  "What community-level lessons have emerged on chemicals and waste management?",
+  "How have SGP-supported grants contributed to sustainable land management?",
+  "What do SGP publications report about community renewable energy solutions?",
+  "What trends are highlighted in SGP annual monitoring reports?",
+  "How have SGP country programme strategies adapted global priorities to local contexts?",
+  "What guidance exists for National Steering Committees on grant selection and oversight?",
+  "Which monitoring indicators have been used to capture community and environmental results?",
+  "What lessons have been documented on replicating or scaling successful grantee practices?",
+  "How have partnerships and cofinancing supported the results of SGP-funded grants?",
+  "What do SGP resources say about community conservation and ICCAs?",
+  "How have grantee initiatives linked watershed management with community water security?",
+  "What examples show climate adaptation and mitigation benefits being pursued together?",
+  "What cross-country lessons emerge from SGP-supported grants working on similar environmental challenges?",
+];
 
-function getSelectedDataset() {
-  const selected = datasetInputs.find((input) => input.checked);
-  const value = selected && DATASET_OPTIONS[selected.value] ? selected.value : "all";
-  return { value, ...DATASET_OPTIONS[value] };
+function selectStarterQuestions(count = 3) {
+  const pool = [...STARTER_QUESTIONS];
+  for (let index = pool.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [pool[index], pool[randomIndex]] = [pool[randomIndex], pool[index]];
+  }
+  return pool.slice(0, count);
 }
 
-function updateDatasetHelp() {
-  const dataset = getSelectedDataset();
-  if (!datasetHelpEl) return;
-  datasetHelpEl.textContent = "";
-  datasetHelpEl.append(document.createTextNode(dataset.help));
-  if (dataset.inlineDisclaimer) {
-    const disclaimer = document.createElement("span");
-    disclaimer.className = "dataset-inline-disclaimer";
-    disclaimer.textContent = ` ${dataset.inlineDisclaimer}`;
-    datasetHelpEl.append(disclaimer);
+function renderStarterQuestions() {
+  suggestionsTitleEl.textContent = t("Starter questions");
+  suggestionsEl.replaceChildren();
+  for (const question of selectStarterQuestions()) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = t(question);
+    suggestionsEl.appendChild(button);
   }
 }
 
@@ -135,15 +161,18 @@ function cleanList(value, limit = 6) {
 function formatPercent(value) {
   const number = Number(value);
   if (!Number.isFinite(number)) return "0%";
-  return `${Math.round(Math.max(0, Math.min(1, number)) * 100)}%`;
+  return new Intl.NumberFormat(currentLocale(), {
+    style: "percent",
+    maximumFractionDigits: 0
+  }).format(Math.max(0, Math.min(1, number)));
 }
 
 function resetRelevanceMap(dataset) {
   if (!mapEl || !mapMetaEl || !mapCountEl || !mapTopEl) return;
-  mapMetaEl.textContent = `Scoring ${dataset.label.toLowerCase()}...`;
-  mapCountEl.textContent = "0 documents";
+  mapMetaEl.textContent = `${t("Scoring")} ${t(dataset.label).toLocaleLowerCase(currentLocale())}...`;
+  mapCountEl.textContent = documentCountLabel(0);
   mapTopEl.replaceChildren();
-  mapEl.innerHTML = '<p class="empty">Loading document relevance...</p>';
+  mapEl.innerHTML = `<p class="empty">${t("Loading document relevance...")}</p>`;
 }
 
 function renderRelevanceTop(documents, selectedDocument = null) {
@@ -155,13 +184,14 @@ function renderRelevanceTop(documents, selectedDocument = null) {
   if (!topDocuments.length) return;
   const heading = document.createElement("div");
   heading.className = "relevance-top-heading";
-  heading.textContent = selectedDocument ? "Selected document" : "Top matching documents";
+  heading.textContent = t(selectedDocument ? "Selected document" : "Top matching documents");
   mapTopEl.appendChild(heading);
   for (const doc of topDocuments) {
     const row = document.createElement("article");
     row.className = "relevance-doc";
     const title = document.createElement(doc.url ? "a" : "strong");
-    title.textContent = doc.title || "Untitled document";
+    title.textContent = doc.title || t("Untitled document");
+    title.setAttribute("data-no-translate", "");
     if (doc.url) {
       title.href = doc.url;
       title.target = "_blank";
@@ -170,6 +200,7 @@ function renderRelevanceTop(documents, selectedDocument = null) {
     row.appendChild(title);
     const meta = document.createElement("div");
     meta.className = "meta";
+    meta.setAttribute("data-no-translate", "");
     const metaParts = [formatPercent(doc.relevance)];
     if (doc.year) metaParts.push(String(doc.year));
     if (doc.source) metaParts.push(String(doc.source).replace(/[_-]+/g, " "));
@@ -180,6 +211,7 @@ function renderRelevanceTop(documents, selectedDocument = null) {
     if (tags.length) {
       const tagLine = document.createElement("p");
       tagLine.textContent = tags.join(" · ");
+      tagLine.setAttribute("data-no-translate", "");
       row.appendChild(tagLine);
     }
     mapTopEl.appendChild(row);
@@ -190,11 +222,11 @@ function renderRelevanceMap(payload, dataset) {
   if (!mapEl || !mapMetaEl || !mapCountEl || !mapTopEl) return;
   const documents = Array.isArray(payload.documents) ? payload.documents : [];
   const sorted = [...documents].sort((a, b) => Number(b.relevance || 0) - Number(a.relevance || 0));
-  mapCountEl.textContent = `${documents.length.toLocaleString()} document${documents.length === 1 ? "" : "s"}`;
-  mapMetaEl.textContent = `Document-level relevance · ${dataset.label}`;
+  mapCountEl.textContent = documentCountLabel(documents.length);
+  mapMetaEl.textContent = `${t("Document-level relevance")} · ${t(dataset.label)}`;
   mapEl.replaceChildren();
   if (!documents.length) {
-    mapEl.innerHTML = '<p class="empty">No documents are available for this corpus selection.</p>';
+    mapEl.innerHTML = `<p class="empty">${t("No documents are available for this corpus selection.")}</p>`;
     mapTopEl.replaceChildren();
     return;
   }
@@ -204,7 +236,7 @@ function renderRelevanceMap(payload, dataset) {
     tile.type = "button";
     tile.className = "relevance-tile";
     tile.style.setProperty("--score", String(relevance));
-    tile.title = `${doc.title || "Untitled document"} · ${formatPercent(relevance)}`;
+    tile.title = `${doc.title || t("Untitled document")} · ${formatPercent(relevance)}`;
     tile.setAttribute("aria-label", tile.title);
     tile.addEventListener("mouseenter", () => renderRelevanceTop(sorted, doc));
     tile.addEventListener("focus", () => renderRelevanceTop(sorted, doc));
@@ -226,10 +258,10 @@ async function loadRelevanceMap(query, dataset, signal) {
     renderRelevanceMap(await response.json(), dataset);
   } catch (error) {
     if (error.name === "AbortError") return;
-    mapMetaEl.textContent = "Corpus map unavailable";
-    mapCountEl.textContent = "0 documents";
+    mapMetaEl.textContent = t("Corpus map unavailable");
+    mapCountEl.textContent = documentCountLabel(0);
     mapTopEl.replaceChildren();
-    mapEl.innerHTML = '<p class="warning">Corpus map could not load. Answers and sources still work.</p>';
+    mapEl.innerHTML = `<p class="warning">${t("Corpus map could not load. Answers and sources still work.")}</p>`;
   }
 }
 
@@ -247,19 +279,19 @@ function uniqueDocuments(documents) {
     const key = item.document_id || url || `${title}|${year || ""}`;
     if (!key || seen.has(key)) continue;
     seen.add(key);
-    clean.push({ title: title || url || "Untitled document", url, summary, language, dataset, year });
+    clean.push({ title: title || url || t("Untitled document"), url, summary, language, dataset, year });
   }
   return clean;
 }
 
 function renderSources(documents) {
   const clean = uniqueDocuments(documents);
-  sourceCountEl.textContent = `${clean.length} document${clean.length === 1 ? "" : "s"}`;
+  sourceCountEl.textContent = documentCountLabel(clean.length);
   sourcesEl.replaceChildren();
   if (!clean.length) {
     const empty = document.createElement("p");
     empty.className = "empty";
-    empty.textContent = "No references returned yet.";
+    empty.textContent = t("No references returned yet.");
     sourcesEl.appendChild(empty);
     return;
   }
@@ -268,6 +300,7 @@ function renderSources(documents) {
     card.className = "source-card";
     const title = document.createElement(doc.url ? "a" : "strong");
     title.textContent = doc.title;
+    title.setAttribute("data-no-translate", "");
     if (doc.url) {
       title.href = doc.url;
       title.target = "_blank";
@@ -282,11 +315,13 @@ function renderSources(documents) {
       const meta = document.createElement("div");
       meta.className = "meta";
       meta.textContent = metaParts.join(" · ");
+      meta.setAttribute("data-no-translate", "");
       card.appendChild(meta);
     }
     if (doc.summary) {
       const summary = document.createElement("p");
       summary.textContent = doc.summary;
+      summary.setAttribute("data-no-translate", "");
       card.appendChild(summary);
     }
     sourcesEl.appendChild(card);
@@ -310,38 +345,38 @@ function cleanIdeas(ideas) {
 function renderIdeas(ideas) {
   const clean = cleanIdeas(ideas);
   if (!clean.length) return;
-  suggestionsTitleEl.textContent = "Suggested next questions";
+  suggestionsTitleEl.textContent = t("Suggested next questions");
   suggestionsEl.replaceChildren();
   for (const idea of clean) {
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = idea;
+    button.setAttribute("data-no-translate", "");
     suggestionsEl.appendChild(button);
   }
 }
 
 async function checkStatus() {
   const requestId = ++statusRequestId;
-  const dataset = getSelectedDataset();
   statusDot.className = "dot loading";
-  statusLabel.textContent = `Checking ${dataset.label.toLowerCase()}...`;
+  statusLabel.textContent = `${t("Checking")} ${t(DATASET.label)}...`;
   backendReady = false;
   submitButton.disabled = true;
   try {
     const endpoint = new URL(`${API_BASE}/status`);
-    endpoint.searchParams.set("data_source", dataset.value);
+    endpoint.searchParams.set("data_source", DATASET.value);
     const response = await fetch(endpoint.toString(), { headers: { "Accept": "application/json" } });
     if (!response.ok) throw new Error(await readError(response));
     const payload = await response.json();
-    if (requestId !== statusRequestId || getSelectedDataset().value !== dataset.value) return;
+    if (requestId !== statusRequestId) return;
     if (payload.corpus_ready) {
-      setStatus("good", `Ready · ${payload.document_count.toLocaleString()} documents`);
+      setStatus("good", `${t("Ready")} · ${documentCountLabel(payload.document_count)}`);
     } else {
-      setStatus("bad", "Corpus unavailable");
+      setStatus("bad", t("Corpus unavailable"));
     }
   } catch (error) {
     if (requestId !== statusRequestId) return;
-    setStatus("bad", "Backend unavailable");
+    setStatus("bad", t("Backend unavailable"));
     answerEl.innerHTML = "";
     const message = document.createElement("p");
     message.className = "error";
@@ -353,6 +388,7 @@ async function checkStatus() {
 async function streamAnswer(query, dataset, signal) {
   const endpoint = new URL(`${API_BASE}/model`);
   endpoint.searchParams.set("data_source", dataset.value);
+  endpoint.searchParams.set("ui_locale", currentLocale());
   const response = await fetch(endpoint.toString(), {
     method: "POST",
     headers: { "Content-Type": "application/json", "Accept": "application/x-ndjson" },
@@ -360,7 +396,7 @@ async function streamAnswer(query, dataset, signal) {
     signal,
   });
   if (!response.ok) throw new Error(await readError(response));
-  if (!response.body) throw new Error("No response stream returned by browser.");
+  if (!response.body) throw new Error(t("No response stream returned by browser."));
 
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
@@ -400,19 +436,19 @@ async function streamAnswer(query, dataset, signal) {
 async function runQuery(query) {
   const cleanQuery = String(query || "").trim();
   if (!cleanQuery || !backendReady) return;
-  const dataset = getSelectedDataset();
   if (activeController) activeController.abort();
   activeController = new AbortController();
-  answerMeta.textContent = `Streaming · ${dataset.label}`;
+  answerMeta.textContent = `${t("Streaming")} · ${t(DATASET.label)}`;
+  answerEl.setAttribute("data-no-translate", "");
   answerEl.textContent = "";
-  sourcesEl.innerHTML = '<p class="empty">Waiting for references...</p>';
-  sourceCountEl.textContent = "0 documents";
-  suggestionsTitleEl.textContent = "Generating follow-up questions...";
+  sourcesEl.innerHTML = `<p class="empty">${t("Waiting for references...")}</p>`;
+  sourceCountEl.textContent = documentCountLabel(0);
+  suggestionsTitleEl.textContent = t("Generating follow-up questions...");
   suggestionsEl.replaceChildren();
-  loadRelevanceMap(cleanQuery, dataset, activeController.signal);
+  loadRelevanceMap(cleanQuery, DATASET, activeController.signal);
   setRunning(true);
   try {
-    await streamAnswer(cleanQuery, dataset, activeController.signal);
+    await streamAnswer(cleanQuery, DATASET, activeController.signal);
   } catch (error) {
     if (error.name !== "AbortError") {
       answerEl.innerHTML = "";
@@ -420,7 +456,7 @@ async function runQuery(query) {
       message.className = "error";
       message.textContent = String(error.message || error);
       answerEl.appendChild(message);
-      answerMeta.textContent = "Error";
+      answerMeta.textContent = t("Error");
     }
   } finally {
     setRunning(false);
@@ -444,12 +480,10 @@ suggestionsEl.addEventListener("click", (event) => {
   runQuery(button.textContent);
 });
 
-datasetInputs.forEach((input) => {
-  input.addEventListener("change", () => {
-    updateDatasetHelp();
-    checkStatus();
-  });
-});
-
-updateDatasetHelp();
+renderStarterQuestions();
 checkStatus();
+
+window.addEventListener("sgp:localechange", () => {
+  renderStarterQuestions();
+  if (!queryRunning) checkStatus();
+});

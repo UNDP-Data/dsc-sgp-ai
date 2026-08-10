@@ -6,6 +6,7 @@
   <meta name="description" content="SGP AI query interface for the GEF Small Grants Programme Knowledge and Learning Platform.">
   <title>SGP AI</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <link rel="stylesheet" href="../assets/i18n.css">
 </head>
 <body class="ai-page">
   <div class="ambient" aria-hidden="true"></div>
@@ -19,6 +20,10 @@
         <a class="nav-link" href="../dashboard/">SGP Portfolio</a>
         <a class="nav-link" href="../archive-browser/">SGP Website Map</a>
       </div>
+      <label class="language-control">
+        <span class="sr-only">Select language</span>
+        <select data-language-select aria-label="Select language"></select>
+      </label>
     </nav>
   </header>
 
@@ -28,28 +33,12 @@
         <p class="eyebrow">GEF Small Grants Programme</p>
         <h1 id="query-title">Ask the SGP knowledge base</h1>
         <p>
-          Answers are generated from prepared SGP excerpts across the Innovation Library,
-          project database, annual monitoring reports, and country programme materials.
+          Answers are generated from SGP publication excerpts covering SGP-supported grants,
+          annual monitoring reports, and country programme materials.
         </p>
       </div>
 
       <form id="query-form" class="query-form">
-        <fieldset class="dataset-selector" aria-labelledby="dataset-selector-label">
-          <legend id="dataset-selector-label">RAG dataset</legend>
-          <div class="dataset-control-row">
-            <div class="dataset-track" role="radiogroup" aria-label="RAG dataset">
-              <input id="dataset-all" type="radio" name="dataset" value="all" checked>
-              <label for="dataset-all">All</label>
-              <input id="dataset-innovation-library" type="radio" name="dataset" value="innovation_library">
-              <label for="dataset-innovation-library">Innovation Library</label>
-              <input id="dataset-project-database" type="radio" name="dataset" value="project_database">
-              <label for="dataset-project-database">Project Database</label>
-              <span class="dataset-thumb" aria-hidden="true"></span>
-            </div>
-          </div>
-          <p id="dataset-help" class="dataset-help">Searches both the Innovation Library and project database.</p>
-        </fieldset>
-
         <div class="query-form-header">
           <label for="query">Question</label>
           <div id="status-pill" class="status-pill" aria-live="polite">
@@ -58,7 +47,7 @@
           </div>
         </div>
         <div class="chat-box">
-          <textarea id="query" required minlength="2">How have SGP-supported grants helped communities address coastal erosion?</textarea>
+          <textarea id="query" required minlength="2" data-i18n-value>How have SGP-supported grants helped communities address coastal erosion?</textarea>
           <button id="submit" class="chat-submit" type="submit" disabled aria-label="Submit question">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M19 5v7a4 4 0 0 1-4 4H6" />
@@ -75,11 +64,7 @@
         <div class="suggestions-heading">
           <span id="suggestions-title">Starter questions</span>
         </div>
-        <div id="suggestions" class="examples" aria-label="Suggested questions">
-          <button type="button">What has SGP supported through community-based adaptation grants?</button>
-          <button type="button">What priority groups appear in recent SGP annual monitoring?</button>
-          <button type="button">What lessons have SGP-supported grants generated on plastic waste?</button>
-        </div>
+        <div id="suggestions" class="examples" aria-label="Suggested questions"></div>
       </div>
     </section>
 
@@ -107,6 +92,7 @@
     </section>
   </main>
 
+  <script src="../assets/i18n.js"></script>
   <script src="../assets/site.js"></script>
 </body>
 </html>

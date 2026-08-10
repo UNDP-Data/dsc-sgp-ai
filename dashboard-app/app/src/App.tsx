@@ -19,6 +19,7 @@ import * as d3 from "d3";
 import { memo, type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { WorldChoropleth, type WorldGeo } from "./components/WorldChoropleth";
+import { LanguageSelect, useI18n } from "./i18n";
 import { computeProjectMetrics, metricValue } from "./lib/aggregation/metrics";
 import { buildRuntimeAggregates } from "./lib/aggregation/aggregateData";
 import { planLocalQuery, type AiQueryPlan, type AllowedFilterValues } from "./lib/ai/localQueryPlanner";
@@ -2284,18 +2285,27 @@ function AppContent({ bundle, geo }: { bundle: DataBundle; geo: WorldGeo }) {
 }
 
 export function App() {
+  const { locale } = useI18n();
   const { bundle, geo, error } = useData();
+  const languageSlot = document.getElementById("dashboard-language-slot");
+  const languageControl = languageSlot
+    ? createPortal(<LanguageSelect />, languageSlot)
+    : null;
+  void locale;
   if (error) {
     return (
-      <div className="boot-state">
-        <Activity size={32} />
-        <h1>Dashboard data failed to load</h1>
-        <p>{error}</p>
-      </div>
+      <>
+        {languageControl}
+        <div className="boot-state">
+          <Activity size={32} />
+          <h1>Dashboard data failed to load</h1>
+          <p>{error}</p>
+        </div>
+      </>
     );
   }
   if (!bundle || !geo) {
-    return <LoadingDashboard />;
+    return <>{languageControl}<LoadingDashboard /></>;
   }
-  return <AppContent bundle={bundle} geo={geo} />;
+  return <>{languageControl}<AppContent bundle={bundle} geo={geo} /></>;
 }

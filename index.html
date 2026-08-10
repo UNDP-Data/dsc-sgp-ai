@@ -6,6 +6,7 @@
   <meta name="description" content="SGP KLP technical demo for exploring feature sets, datasets, and knowledge platform opportunities for the GEF Small Grants Programme.">
   <title>GEF Small Grants Programme Knowledge and Learning Platform</title>
   <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/i18n.css">
 </head>
 <body class="landing-page">
   <header class="site-header sgp-suite-nav" aria-label="SGP KLP navigation">
@@ -18,6 +19,10 @@
         <a class="nav-link" href="dashboard/">SGP Portfolio</a>
         <a class="nav-link" href="archive-browser/">SGP Website Content</a>
       </div>
+      <label class="language-control">
+        <span class="sr-only">Select language</span>
+        <select data-language-select aria-label="Select language"></select>
+      </label>
     </nav>
   </header>
 
@@ -49,5 +54,6 @@
       </a>
     </section>
   </main>
+  <script src="assets/i18n.js"></script>
 </body>
 </html>

@@ -24,6 +24,45 @@
 body { margin: 0; background: var(--bg); }
 button, input, select { font: inherit; }
 button { cursor: pointer; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.dashboard-language-control {
+  display: inline-flex;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.dashboard-language-control select {
+  min-width: 7.25rem;
+  height: 1.55rem;
+  padding: 0 1.65rem 0 0.55rem;
+  border: 1px solid rgba(228, 213, 189, 0.32);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 248, 231, 0.96);
+  font-size: 0.7rem;
+  font-weight: 760;
+}
+
+.dashboard-language-control option {
+  background: #ffffff;
+  color: #17322d;
+}
+
+html[dir="rtl"] input,
+html[dir="rtl"] textarea {
+  text-align: right;
+}
 button,
 summary,
 input,
@@ -1280,6 +1319,52 @@ body {
   color: #102f2a;
   background: #fff3ba;
   outline: none;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --sgp-suite-nav-h: 4.5rem;
+  }
+
+  .sgp-suite-nav {
+    padding: 0.35rem 0.65rem;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: 1.75rem 1.75rem;
+    align-items: center;
+    gap: 0.3rem 0.65rem;
+    direction: ltr;
+  }
+
+  .sgp-suite-nav__brand {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  #dashboard-language-slot {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    min-width: 0;
+  }
+
+  .dashboard-language-control select {
+    width: 8.25rem;
+    min-width: 0;
+  }
+
+  .sgp-suite-nav nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .sgp-suite-nav nav::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .app-shell {
@@ -3248,8 +3333,10 @@ body {
 }
 
 .atlas-context-card--workspace .sgp-view-tabs strong {
+  min-width: 0;
   font-size: 0.62rem;
   line-height: 1;
+  overflow-wrap: anywhere;
 }
 
 .atlas-context-card--workspace .sgp-view-tabs span {
